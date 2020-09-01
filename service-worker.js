@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/nyan.finance/precache-manifest.4c69f3d9834b82df5ce5a41f87362275.js"
+  "/nyan.finance/precache-manifest.22c9a6e3d7d610e3661251c31cc75319.js"
 );
 
 self.addEventListener('message', (event) => {

@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "909c2997265228a97653d50f7652fb97",
+    "revision": "e4fa645f299e5b8a23cac8d3fc26ce49",
     "url": "/nyan.finance/index.html"
   },
   {
-    "revision": "bc0a022f97b12589512e",
+    "revision": "3f5a1ad42ca9bbf4e8af",
     "url": "/nyan.finance/static/css/main.1130b721.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/nyan.finance/static/js/2.34badee0.chunk.js"
   },
   {
-    "revision": "bc0a022f97b12589512e",
-    "url": "/nyan.finance/static/js/main.584d1f8e.chunk.js"
+    "revision": "3f5a1ad42ca9bbf4e8af",
+    "url": "/nyan.finance/static/js/main.9b586045.chunk.js"
   },
   {
     "revision": "8c8284dc9083e6624b4b",
