@@ -15,7 +15,9 @@ state = {
     isApproving: false,
     isStaking: false,
     isWithdrawing: false,
-    catnipRewards: 0
+    catnipRewards: 0,
+    totalNyanSupply: 0,
+    allowance: 0
     };
   
   handleClick = () => {
@@ -24,7 +26,17 @@ state = {
 
   updateStakingInput(e) {
     this.setState({stakeAmount: e.target.value})
+    if (this.state.stakeAmount > this.state.allowance) {
+        this.setState({isApproved: false})
+    }
  }
+
+ getAllowance = async () => {
+    let _nyanAllowance = await this.nyanInstance.methods.allowance(this.accounts[0], this.catnipInstance._address).call();
+    if (_nyanAllowance > 0) {
+        this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_nyanAllowance.toString())})
+    }
+  }
 
   stakeNyan = async () => {
     if (this.state.isStaking) {
@@ -68,13 +80,20 @@ state = {
     }
   }
 
+  getNyanSupply = async () => {
+    let _nyanSupply = await this.nyanInstance.methods.totalSupply().call();
+    this.setState({
+      totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
+    })
+  }
+
   approveNyan = async () => {
     if (this.state.isApproving) {
         return;
     }  
     this.setState({isApproving: true});
     
-    let approveStaking = await this.nyanInstance.methods.approve(this.catnipInstance._address, this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+    let approveStaking = await this.nyanInstance.methods.approve(this.catnipInstance._address, this.web3.utils.toWei(this.state.totalNyanSupply.toString())).send({
         from: this.accounts[0],
         gas: 1000000
     });
@@ -130,6 +149,8 @@ state = {
         "0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113",
       );
 
+      this.getAllowance();
+      this.getNyanSupply()
       this.getMyStakeAmount();
       this.getCatnipRewards();
 
