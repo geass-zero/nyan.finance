@@ -122,12 +122,12 @@ state = {
 
       this.nyanInstance = new this.web3.eth.Contract(
         NyanToken.abi,
-        NyanToken.networks[this.networkId] && NyanToken.networks[this.networkId].address,
+        "0xc9ce70a381910d0a90b30d408cc9c7705ee882de"
       );
 
       this.catnipInstance = new this.web3.eth.Contract(
         CatnipToken.abi,
-        CatnipToken.networks[this.networkId] && CatnipToken.networks[this.networkId].address,
+        "0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113",
       );
 
       this.getMyStakeAmount();

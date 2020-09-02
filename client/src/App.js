@@ -80,22 +80,22 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
+    document.title = "Nyan.finance";
     try {
       // Get network provider and web3 instance.
       this.web3 = await getWeb3();
-      console.log(this.web3.providers.HttpProvider);
       
       // Use web3 to get the user's accounts.
       this.accounts = await this.web3.eth.getAccounts();
-      console.log(this.accounts[0])
+      
       // Get the contract instance.
       this.networkId = await this.web3.eth.net.getId();
-      console.log(NyanToken);
+     
       this.nyanInstance = new this.web3.eth.Contract(
         NyanToken.abi,
         "0xc9ce70a381910d0a90b30d408cc9c7705ee882de"
       );
-      console.log(this.nyanInstance);
+     
       this.catnipInstance = new this.web3.eth.Contract(
         CatnipToken.abi,
         "0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113",
