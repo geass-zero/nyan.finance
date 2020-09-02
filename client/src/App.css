@@ -125,6 +125,31 @@
   background-repeat: no-repeat;
 }
 
+.address {
+  margin: 0 auto;
+  text-align: center;
+  left: 0;
+  right: 0;
+  margin-top: 7px;
+  position: absolute;
+}
+
+.ny {
+  bottom: 84px;
+}
+
+.ct {
+  bottom: 60px;
+}
+
+.addr-pink {
+  background-color: #ff95da;
+  border-radius: 5px;
+  width: 365px;
+  display: inline-block;
+  cursor: pointer;
+}
+
 .social-box {
   width: 50%;
   height: 50px;

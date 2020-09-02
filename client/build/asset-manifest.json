@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/nyan.finance/static/css/main.91e5cfc7.chunk.css",
-    "main.js": "/nyan.finance/static/js/main.a935b688.chunk.js",
-    "main.js.map": "/nyan.finance/static/js/main.a935b688.chunk.js.map",
-    "runtime-main.js": "/nyan.finance/static/js/runtime-main.477c8fef.js",
-    "runtime-main.js.map": "/nyan.finance/static/js/runtime-main.477c8fef.js.map",
-    "static/js/2.34badee0.chunk.js": "/nyan.finance/static/js/2.34badee0.chunk.js",
-    "static/js/2.34badee0.chunk.js.map": "/nyan.finance/static/js/2.34badee0.chunk.js.map",
-    "index.html": "/nyan.finance/index.html",
-    "precache-manifest.22ba9c3f84f143b070a40576aad37097.js": "/nyan.finance/precache-manifest.22ba9c3f84f143b070a40576aad37097.js",
-    "service-worker.js": "/nyan.finance/service-worker.js",
-    "static/css/main.91e5cfc7.chunk.css.map": "/nyan.finance/static/css/main.91e5cfc7.chunk.css.map",
-    "static/media/App.css": "/nyan.finance/static/media/telegram.a823024f.png"
+    "main.css": "/static/css/main.c6240fdf.chunk.css",
+    "main.js": "/static/js/main.e20e5665.chunk.js",
+    "main.js.map": "/static/js/main.e20e5665.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.b240f91f.js",
+    "runtime-main.js.map": "/static/js/runtime-main.b240f91f.js.map",
+    "static/js/2.7e32cebf.chunk.js": "/static/js/2.7e32cebf.chunk.js",
+    "static/js/2.7e32cebf.chunk.js.map": "/static/js/2.7e32cebf.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.44e78d798cb388be43f4b8b8ca05faec.js": "/precache-manifest.44e78d798cb388be43f4b8b8ca05faec.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.c6240fdf.chunk.css.map": "/static/css/main.c6240fdf.chunk.css.map",
+    "static/media/App.css": "/static/media/telegram.a823024f.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.477c8fef.js",
-    "static/js/2.34badee0.chunk.js",
-    "static/css/main.91e5cfc7.chunk.css",
-    "static/js/main.a935b688.chunk.js"
+    "static/js/runtime-main.b240f91f.js",
+    "static/js/2.7e32cebf.chunk.js",
+    "static/css/main.c6240fdf.chunk.css",
+    "static/js/main.e20e5665.chunk.js"
   ]
 }

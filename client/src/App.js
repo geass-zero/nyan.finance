@@ -146,8 +146,13 @@ class App extends Component {
 
         {this.state.isViewingStaking ? <Staking toggle={this.toggleStakingView} /> : null}
         {this.state.isViewingPump ? <Pump toggle={this.togglePumpView} /> : null}
+
+        <div className="address ny">NYAN address: <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
+        <div className="address ct">CATNIP address: <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
         <div className="social-box">
-          <div className="social-icon git" onClick={this.setNyanAddress}></div>
+        <a target="_blank" href={"https://github.com/geass-zero/nyan.finance"}>
+            <div className="social-icon git"></div>
+          </a>
           <a target="_blank" href={"https://www.twitter.com/nyanfinance"}>
             <div className="social-icon twit"></div>
           </a> 
