@@ -9,6 +9,7 @@ import {setWeb3, getWeb3Var} from "./shared";
 import "./App.css";
 
 import nyanGif from './assets/nyan-small.gif';
+import nyanLogo from './assets/nyan-logo.png';
 
 class App extends Component {
   state = {
@@ -20,7 +21,18 @@ class App extends Component {
     totalCatnipSupply: 0
    };
 
-   
+  getRoundedNyanBalance() {
+    return parseFloat(this.state.nyanBalance).toFixed(6);
+  }
+
+  getRoundedTotalNyanStaked() {
+    let _nyanStaked = this.state.totalNyanStaked;
+    if (!isNaN(_nyanStaked)) {
+      return parseFloat(_nyanStaked).toFixed(2);
+    }
+    
+    return _nyanStaked;
+  }
 
    getNyanBalance = async () => {
      let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
@@ -126,12 +138,27 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <div className="Logo">NYAN.FINANCE</div>    
-        <div className="stats-box">
-        <div className="Nyan-bal">You have {this.state.nyanBalance} NYAN </div>
-          <div className="stats-op">Total Nyan Supply: {this.state.totalNyanSupply}</div>
-          <div className="stats-op">Total Nyan Staked: {this.state.totalNyanStaked}</div>
-          <div className="stats-op">Total Catnip Supply: {this.state.totalCatnipSupply}</div>
+        <div className="Logo">NYAN.FINANCE</div>
+        <div className="top-box-container">
+          <div className="top-box balance-box">
+            <img className="balance-logo-image" src={nyanLogo}/>
+            <div className="top-box-desc">Your NYAN Balance</div>
+            <div className="top-box-val nyan-balance">{this.getRoundedNyanBalance()}</div>
+          </div>
+          <div className="top-box stats-box">
+            <div className="stats-op">
+              <div className="top-box-desc">Total Nyan Supply</div>
+              <div className="top-box-val">{this.state.totalNyanSupply}</div>
+            </div>
+            <div className="stats-op">
+              <div className="top-box-desc">Total Nyan Staked</div>
+              <div className="top-box-val">{this.getRoundedTotalNyanStaked()}</div>
+            </div>
+            <div className="stats-op">
+              <div className="top-box-desc">Total Catnip Supply</div>
+              <div className="top-box-val">{this.state.totalCatnipSupply}</div>
+            </div>
+          </div>
         </div>
         <div styles={{backgroundImage: `url(${nyanGif})`}} className="Nyan-cat"></div>
         <div className="Options-box">
@@ -149,6 +176,9 @@ class App extends Component {
 
         <div className="address ny">NYAN address: <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
         <div className="address ct">CATNIP address: <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
+        <div className="links-box">
+          <a href="https://etherscan.io/token/0xc9ce70a381910d0a90b30d408cc9c7705ee882de">NYAN Token Etherscan</a> . <a href="https://uniswap.info/pair/0x544cd63c9a3363dab66733bf8073cb981db58cba">NYAN-ETH Uniswap</a>
+        </div>
         <div className="social-box">
         <a target="_blank" href={"https://github.com/geass-zero/nyan.finance"}>
             <div className="social-icon git"></div>

@@ -41,7 +41,7 @@ export default class Pump extends Component {
 
             <div className="vote-nyan"></div>
 
-            <div className="launch-date">Voting starts late September</div>
+            <div className="button launch-date">Voting starts late September</div>
         </div>
       </div>
     );

@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+Body {
+  background-color: #fdfafa;
+  box-sizing: border-box;
+}
+
 .App {
   padding: 10px;
 }
@@ -15,32 +22,57 @@
   font-size: 30px;
 }
 
-.Nyan-bal {
-  position: relative;
-  display: inline-block;
-  /* width: 300px; */
-  text-align: center;
-  /* margin-left: 50px; */
-  margin-bottom: 0px;
-  margin-right: 50px;
-  text-decoration: underline;
-  font-weight: bold;
+.top-box-desc {
+  text-align: left;
+  color: rgb(192,123,196);
+  font-weight: 600;
 }
 
-.stats-box {
-  position: relative;
+.top-box-val {
+  text-align: left;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Roboto Mono", monospace;
+}
+
+.nyan-balance {
+  font-size: 36px;
+}
+
+.top-box-container {
   display: inline-block;
+  position: absolute;
+  right: 5px;
+  float: right;
+  text-align: left;
   width: 260px;
-  height: 100px;
-  top: 0px;
+  top: 5px;
+}
+
+.balance-logo-image {
+  width: 48px;
+  height: 48px;
+}
+
+.balance-logo-image:hover {
+  transform: rotate(180deg) scaleX(-1);
+}
+
+.top-box {
   border-radius: 10px;
   background-color: #f1f1f1;
-  text-align: left;
-  float: right;
   padding: 12px;
 }
 
-.stats-op {
+.balance-box {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.stats-box {
+}
+
+.stats-op:not(:last-child) {
   margin-bottom: 10px;
 }
 
@@ -69,13 +101,22 @@
   width: 400px;
   height: 200px;
   /* background-color: gray; */
-  -webkit-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.23);
-  -moz-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.23);
-  box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.23);
+  -webkit-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
+  -moz-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
+  box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
   display: inline-block;
-  margin-right: 10px;
   cursor: pointer;
   transition: all .5s;
+  border-radius: 30px;
+  background-color: white;
+}
+
+.Option:first-child {
+  margin-right: 12px;
+}
+
+.Option:last-child {
+  margin-left: 12px;
 }
 
 .Option h3 {
@@ -135,11 +176,25 @@
 }
 
 .ny {
-  bottom: 84px;
+  bottom: 128px;
 }
 
 .ct {
-  bottom: 60px;
+  bottom: 100px;
+}
+
+.links-box {
+  position: absolute;
+  bottom: 70px;
+  text-align: center;
+  left: 0;
+  right: 0;
+}
+
+.links-box a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #ff95da;
 }
 
 .addr-pink {
@@ -148,6 +203,7 @@
   width: 365px;
   display: inline-block;
   cursor: pointer;
+  color: white;
 }
 
 .social-box {
@@ -211,26 +267,30 @@
 }
 
 .modal {
+  top: 0;
+  left: 0;
   position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
   z-index: 100;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
   background-color: rgba(0, 0, 0, 0.25);
 }
 
 .modal_content {
   background-color: white;
   position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
   margin: 0 auto;
   width: 90%;
-  height: 90%;
+  max-width: 768px;
   padding: 20px;
   border-radius: 5px;
+  border-color: red;
+  border-width: 10px;
 }
 
 .close {
@@ -238,40 +298,50 @@
   float: right;
   width: 20px;
   height: 20px;
-  font-size: 27px;
+  font-size: 32px;
   margin-right: 16px;
 }
 
 .close:hover {
-  color: cyan;
+  color: pink;
   cursor: pointer;
 }
 
 .input {
-  width: 80%;
+  width: 100%;
   height: 80px;
   border: none;
   outline: none;
   font-size: 40px;
+  padding-left: 10px;
   border-bottom: 3px black solid;
 }
 
-.s-amount {
-  background-color: #e9e9e9;
-  width: 310px;
-  padding-left: 10px;
+.amount-staked-box {
+  background-color: #f2f2f2;
+  width: 250px;
+  padding: 10px;
+  border-radius: 10px;
 }
 
-.stake-button {
-  width: 125px;
+.amount-staked-image {
+  margin-right: 15px;
+}
+
+.button {
   padding: 10px;
+  margin: 0 auto;
+  background-color: #fca3dc;
+  color: #282c34;
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
+  border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 50px;
-  margin-right: 45px;
-  display: inline-block;
-  color: white;
-  background-color: black;
+}
+
+.withdraw-button {
+  margin-top: 10px;
 }
 
 .updateC {
@@ -285,13 +355,9 @@
 
 .launch-date {
   width: 400px;
-  padding: 10px;
-  margin: 0 auto;
-  background-color: #fca3dc;
-  color: #282c34;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  border-radius: 6px;
   cursor: default;
+}
+
+.inline-block {
+  display: inline-block !important;
 }
