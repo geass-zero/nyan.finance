@@ -1,0 +1,196 @@
+import React, { Component } from "react";
+import NyanToken from "./contracts/NyanToken.json";
+import CatnipToken from "./contracts/CatnipToken.json";
+import getWeb3 from "./getWeb3";
+import {setWeb3, getWeb3Var} from "./shared";
+import App from "./App";
+
+export default class Staking extends Component {
+
+state = {
+    loaded: false,
+    stakeAmount: 0,
+    stakedAmount: 0,
+    isApproved: false,
+    isApproving: false,
+    isStaking: false,
+    isWithdrawing: false,
+    catnipRewards: 0
+    };
+  
+  handleClick = () => {
+    this.props.toggle();
+  };
+
+  updateStakingInput(e) {
+    this.setState({stakeAmount: e.target.value})
+ }
+
+  stakeNyan = async () => {
+    if (this.state.isStaking) {
+        return;
+    }                        
+    this.setState({isStaking: true});
+    try {
+        let stakeRes = await this.catnipInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+            from: this.accounts[0],
+            gas: 1000000
+        });
+        if (stakeRes["status"]) {
+            this.setState({isStaking: false, isApproved: false, stakeAmount: 0});
+            this.getMyStakeAmount();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+  }
+
+  withdrawNyan = async () => {
+    if (this.state.isWithdrawing) {
+        return;
+    }
+    this.setState({isWithdrawing: true});
+    try {
+        let unstakeRes = await this.catnipInstance.methods.withdraw(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+            from: this.accounts[0],
+            gas: 1000000
+        });
+    
+        if (unstakeRes["status"]) {
+            this.setState({isWithdrawing: false, stakeAmount: 0});
+            this.getMyStakeAmount();
+        } else {
+            this.setState({isWithdrawing: false});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
+  approveNyan = async () => {
+    if (this.state.isApproving) {
+        return;
+    }  
+    this.setState({isApproving: true});
+    
+    let approveStaking = await this.nyanInstance.methods.approve(this.catnipInstance._address, this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+        from: this.accounts[0],
+        gas: 1000000
+    });
+    
+    if (approveStaking["status"]) {
+        this.setState({isApproving: false, isApproved: true});
+        
+    }
+  }
+
+  getMyStakeAmount = async () => {
+    let stakeA = await this.catnipInstance.methods.getAddressStakeAmount(this.accounts[0]).call();
+    
+    this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
+  }
+
+  getCatnipRewards = async () => {
+    
+    let cRewards = await this.catnipInstance.methods.myRewardsBalance(this.accounts[0]).call();
+
+    this.setState({catnipRewards: this.web3.utils.fromWei(cRewards)});
+  }
+
+  claimRewards = async () => {
+    let claim = await this.catnipInstance.methods.getReward().send({
+        from: this.accounts[0],
+        gas: 1000000
+    });
+    
+    this.getCatnipRewards();
+  }
+
+  componentDidMount = async () => {
+
+    try {
+      this.web3 = getWeb3Var();
+        
+      // Get network provider and web3 instance.
+     
+      // Use web3 to get the user's accounts.
+      this.accounts = await this.web3.eth.getAccounts();
+    
+      // Get the contract instance.
+      this.networkId = await this.web3.eth.net.getId();
+
+      this.nyanInstance = new this.web3.eth.Contract(
+        NyanToken.abi,
+        NyanToken.networks[this.networkId] && NyanToken.networks[this.networkId].address,
+      );
+
+      this.catnipInstance = new this.web3.eth.Contract(
+        CatnipToken.abi,
+        CatnipToken.networks[this.networkId] && CatnipToken.networks[this.networkId].address,
+      );
+
+      this.getMyStakeAmount();
+      this.getCatnipRewards();
+
+      // Set web3, accounts, and contract to the state, and then proceed with an
+      // example of interacting with the contract's methods.
+      this.setState({loaded: true});
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
+  };
+
+  render() {
+    return (
+      <div className="modal">
+        <div className="modal_content">
+          <span className="close" onClick={this.handleClick}>
+            &times;
+          </span>
+          <h1>STAKE NYAN</h1>
+          <h4 className="s-amount">Amount staked: {this.state.stakedAmount}</h4>
+            <div>
+                <input 
+                className="input" 
+                placeholder="0"
+                value={this.state.stakeAmount} 
+                onChange={this.updateStakingInput.bind(this)}
+                type="number">
+
+                </input>
+            </div>
+            <br />
+            {!this.state.isApproved ? <div className="stake-button" onClick={this.approveNyan}>
+                {!this.state.isApproving ? <div>STEP 1: APPROVE</div> : null}
+                {this.state.isApproving ? <div>APPROVING...</div> : null}
+            </div> : null}
+            {this.state.isApproved ? <div className="stake-button" onClick={this.stakeNyan}>
+                {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
+                {this.state.isStaking ? <div>STAKING...</div> : null}
+            </div> : null}
+            <div className="stake-button" onClick={this.withdrawNyan}>
+                {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
+                {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
+            </div>
+
+            <h1>GET CATNIP</h1>
+            <div className="updateC" onClick={this.getCatnipRewards}>UPDATE</div>
+            <p>INFO: Catnip rewards grow per block and are updated on each transaction(send) to functions 
+                with the "updateStakingRewards" modifier.</p>
+            <div>
+                <input className="input" disabled 
+                value={this.state.catnipRewards}
+                placeholder="0" type="number"></input>
+            </div>
+            <br />
+            <div className="stake-button" onClick={this.claimRewards}>CLAIM</div>
+        </div>
+      </div>
+    );
+  }
+}
