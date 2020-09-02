@@ -119,7 +119,7 @@
   font-size: 30px;
   margin: 0 auto;
   right: 0;
-  background-image: url(/static/media/Nyan_vote.18596961.gif);
+  background-image: url("./assets/Nyan_vote.gif");
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
