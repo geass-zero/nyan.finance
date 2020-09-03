@@ -5,6 +5,8 @@ import getWeb3 from "./getWeb3";
 import {setWeb3, getWeb3Var} from "./shared";
 import App from "./App";
 
+import nyanLogo from './assets/nyan-logo.png';
+
 export default class Staking extends Component {
 
 state = {
@@ -170,7 +172,15 @@ state = {
             &times;
           </span>
           <h1>STAKE NYAN</h1>
-          <h4 className="s-amount">Amount staked: {this.state.stakedAmount}</h4>
+          <div className="amount-staked-box">
+            <div className="inline-block amount-staked-image">
+              <img className="balance-logo-image" src={nyanLogo}/>
+            </div>
+            <div className="inline-block">
+              <div className="top-box-desc">Amount staked</div>
+              <div className="top-box-val nyan-balance">{this.state.stakedAmount}</div>
+            </div>
+          </div>
             <div>
                 <input 
                 className="input" 
@@ -182,15 +192,15 @@ state = {
                 </input>
             </div>
             <br />
-            {!this.state.isApproved ? <div className="stake-button" onClick={this.approveNyan}>
+            {!this.state.isApproved ? <div className="button stake-button" onClick={this.approveNyan}>
                 {!this.state.isApproving ? <div>STEP 1: APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved ? <div className="stake-button" onClick={this.stakeNyan}>
+            {this.state.isApproved ? <div className="button stake-button" onClick={this.stakeNyan}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
-            <div className="stake-button" onClick={this.withdrawNyan}>
+            <div className="button withdraw-button" onClick={this.withdrawNyan}>
                 {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
                 {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
             </div>
@@ -205,7 +215,7 @@ state = {
                 placeholder="0" type="number"></input>
             </div>
             <br />
-            <div className="stake-button" onClick={this.claimRewards}>CLAIM</div>
+            <div className="button stake-button" onClick={this.claimRewards}>CLAIM</div>
         </div>
       </div>
     );
