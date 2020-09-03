@@ -115,7 +115,7 @@ class App extends Component {
 
       setWeb3(this.web3);
       
-      this.getNyanSupply()
+      this.getNyanSupply();
       this.getCatnipSupply();
       this.totalNyanStaked();
     

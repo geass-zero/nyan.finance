@@ -46,19 +46,6 @@ Body {
   float: right;
   text-align: left;
   width: 260px;
-  top: 5px;
-}
-
-.balance-logo-image {
-  width: 48px;
-  height: 48px;
-}
-
-.balance-logo-image:hover {
-  transform: rotate(180deg) scaleX(-1);
-}
-
-.top-box {
   border-radius: 10px;
   background-color: #f1f1f1;
   padding: 12px;
