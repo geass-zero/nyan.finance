@@ -92,8 +92,7 @@ state = {
     this.setState({isApproving: true});
     
     let approveStaking = await this.nyanInstance.methods.approve(this.catnipInstance._address, this.web3.utils.toWei(this.state.totalNyanSupply.toString())).send({
-        from: this.accounts[0],
-        gas: 1000000
+        from: this.accounts[0]
     });
     
     if (approveStaking["status"]) {
@@ -117,8 +116,7 @@ state = {
 
   claimRewards = async () => {
     let claim = await this.catnipInstance.methods.getReward().send({
-        from: this.accounts[0],
-        gas: 1000000
+        from: this.accounts[0]
     });
     
     this.getCatnipRewards();
