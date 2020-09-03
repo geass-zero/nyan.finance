@@ -45,8 +45,7 @@ state = {
     this.setState({isStaking: true});
     try {
         let stakeRes = await this.catnipInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
-            from: this.accounts[0],
-            gas: 1000000
+            from: this.accounts[0]
         });
         if (stakeRes["status"]) {
             this.setState({isStaking: false, isApproved: false, stakeAmount: 0});
@@ -65,8 +64,7 @@ state = {
     this.setState({isWithdrawing: true});
     try {
         let unstakeRes = await this.catnipInstance.methods.withdraw(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
-            from: this.accounts[0],
-            gas: 1000000
+            from: this.accounts[0]
         });
     
         if (unstakeRes["status"]) {
