@@ -11,48 +11,51 @@ import "./App.css";
 import nyanGif from './assets/nyan-small.gif';
 import nyanLogo from './assets/nyan-logo.png';
 
+import Web3 from "web3";
+
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
-// Create a connector
-const connector = new WalletConnect({
-  bridge: "https://bridge.walletconnect.org", // Required
-  qrcodeModal: QRCodeModal,
-});
+// // Create a connector
+// const connector = new WalletConnect({
+//   bridge: "https://bridge.walletconnect.org", // Required
+//   qrcodeModal: QRCodeModal,
+// });
 
 
-// Check if connection is already established
-if (!connector.connected) {
-  // create new session
-  connector.createSession();
-}
+// // Check if connection is already established
+// if (!connector.connected) {
+//   // create new session
+//   connector.createSession();
+// }
 
-// Subscribe to connection events
-connector.on("connect", (error, payload) => {
-  if (error) {
-    throw error;
-  }
+// // Subscribe to connection events
+// connector.on("connect", (error, payload) => {
+//   if (error) {
+//     throw error;
+//   }
 
-  // Get provided accounts and chainId
-  const { accounts, chainId } = payload.params[0];
-});
+//   // Get provided accounts and chainId
+//   const { accounts, chainId } = payload.params[0];
+// });
 
-connector.on("session_update", (error, payload) => {
-  if (error) {
-    throw error;
-  }
+// connector.on("session_update", (error, payload) => {
+//   if (error) {
+//     throw error;
+//   }
 
-  // Get updated accounts and chainId
-  const { accounts, chainId } = payload.params[0];
-});
+//   // Get updated accounts and chainId
+//   const { accounts, chainId } = payload.params[0];
+// });
 
-connector.on("disconnect", (error, payload) => {
-  if (error) {
-    throw error;
-  }
+// connector.on("disconnect", (error, payload) => {
+//   if (error) {
+//     throw error;
+//   }
 
-  // Delete connector
-});
+//   // Delete connector
+// });
 
 class App extends Component {
   state = {
@@ -145,9 +148,24 @@ class App extends Component {
 
   componentDidMount = async () => {
     document.title = "Nyan.finance";
+
     try {
-      // Get network provider and web3 instance.
-      this.web3 = await getWeb3();
+      // // Get network provider and web3 instance.
+      if (!window.ethereum) {
+          //  Create WalletConnect Provider
+        const provider = new WalletConnectProvider({
+          infuraId: "83301e4b4e234662b7769295c0f4a2e1" // Required
+        });
+
+        //  Enable session (triggers QR Code modal)
+        await provider.enable();
+
+        //  Create Web3
+        this.web3 = new Web3(provider);
+      } else {
+        this.web3 = await getWeb3();
+      }
+
       
       // Use web3 to get the user's accounts.
       this.accounts = await this.web3.eth.getAccounts();
@@ -166,8 +184,7 @@ class App extends Component {
       );
 
       setWeb3(this.web3);
-      
-      console.log(connector);
+
       this.getNyanSupply();
       this.getCatnipSupply();
       this.totalNyanStaked();
