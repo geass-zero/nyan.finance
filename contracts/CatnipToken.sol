@@ -102,10 +102,6 @@ contract CatnipToken is ERC20 {
     function getAddressStakeAmount(address _account) public view returns (uint256) {
         return _stakedBalances[_account].nyanStaked;
     }
-
-    function setBlockNum(address account) public {
-        _stakedBalances[account].lastBlockChecked = 1;
-    }
     
     function setRewardsVar(uint256 _amount) public _onlyOwner {
         rewardsVar = _amount;

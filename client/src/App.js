@@ -11,6 +11,49 @@ import "./App.css";
 import nyanGif from './assets/nyan-small.gif';
 import nyanLogo from './assets/nyan-logo.png';
 
+import WalletConnect from "@walletconnect/client";
+import QRCodeModal from "@walletconnect/qrcode-modal";
+
+// Create a connector
+const connector = new WalletConnect({
+  bridge: "https://bridge.walletconnect.org", // Required
+  qrcodeModal: QRCodeModal,
+});
+
+
+// Check if connection is already established
+if (!connector.connected) {
+  // create new session
+  connector.createSession();
+}
+
+// Subscribe to connection events
+connector.on("connect", (error, payload) => {
+  if (error) {
+    throw error;
+  }
+
+  // Get provided accounts and chainId
+  const { accounts, chainId } = payload.params[0];
+});
+
+connector.on("session_update", (error, payload) => {
+  if (error) {
+    throw error;
+  }
+
+  // Get updated accounts and chainId
+  const { accounts, chainId } = payload.params[0];
+});
+
+connector.on("disconnect", (error, payload) => {
+  if (error) {
+    throw error;
+  }
+
+  // Delete connector
+});
+
 class App extends Component {
   state = {
     isViewingStaking : false,
@@ -18,8 +61,17 @@ class App extends Component {
     nyanBalance: 0,
     totalNyanSupply: 0,
     totalNyanStaked: 0,
-    totalCatnipSupply: 0
+    totalCatnipSupply: 0,
+    isViewingGifts: false
    };
+
+   mediaQuery = {
+    desktop: 1200,
+    tablet: 768,
+    phone: 576,
+  };
+
+  
 
   getRoundedNyanBalance() {
     return parseFloat(this.state.nyanBalance).toFixed(6);
@@ -115,6 +167,7 @@ class App extends Component {
 
       setWeb3(this.web3);
       
+      console.log(connector);
       this.getNyanSupply();
       this.getCatnipSupply();
       this.totalNyanStaked();
@@ -133,9 +186,9 @@ class App extends Component {
 
 
   render() {
-    if (!this.state.loaded) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
+    // if (!this.state.loaded) {
+    //   return <div>Loading Web3, accounts, and contract...</div>;
+    // }
     return (
       <div className="App">
         <div className="Logo">NYAN.FINANCE</div>
@@ -174,22 +227,27 @@ class App extends Component {
         {this.state.isViewingStaking ? <Staking toggle={this.toggleStakingView} /> : null}
         {this.state.isViewingPump ? <Pump toggle={this.togglePumpView} /> : null}
 
-        <div className="address ny">NYAN address: <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
-        <div className="address ct">CATNIP address: <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
+        <div className="address ny"><div className="addr-name">NYAN address:</div> <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
+        <div className="address ct"><div className="addr-name">CATNIP address:</div> <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
         <div className="links-box">
           <a href="https://etherscan.io/token/0xc9ce70a381910d0a90b30d408cc9c7705ee882de">NYAN Token Etherscan</a> . <a href="https://uniswap.info/pair/0x544cd63c9a3363dab66733bf8073cb981db58cba">NYAN-ETH Uniswap</a>
         </div>
         <div className="social-box">
-        <a target="_blank" href={"https://github.com/geass-zero/nyan.finance"}>
-            <div className="social-icon git"></div>
-          </a>
-          <a target="_blank" href={"https://www.twitter.com/nyanfinance"}>
-            <div className="social-icon twit"></div>
-          </a> 
-          <a target="_blank" href={"https://t.me/nyanfinance"}>
-            <div className="social-icon tele"></div>
-          </a>
+            <a target="_blank" href={"https://github.com/geass-zero/nyan.finance"}>
+              <div className="social-icon git"></div>
+            </a>
+            <a target="_blank" href={"https://www.twitter.com/nyanfinance"}>
+              <div className="social-icon twit"></div>
+            </a> 
+            <a target="_blank" href={"https://t.me/nyanfinance"}>
+              <div className="social-icon tele"></div>
+            </a>
+
         </div>
+        {/* <div className="gift-icon"></div>
+        <div className="gift-box">
+          <textarea></textarea>
+        </div> */}
       </div>
     );
   }

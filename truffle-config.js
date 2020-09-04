@@ -33,6 +33,13 @@ module.exports = {
       },
       network_id: 3,
       skipDryRun: true
+    },
+    mainnet_infura: {
+      provider: function () {
+        return new HDWalletProvider(process.env.PRODMNEMONIC, "https://mainnet.infura.io/v3/83301e4b4e234662b7769295c0f4a2e1", accountIndex)
+      },
+      network_id: 1,
+      skipDryRun: true
     }
   },
   compilers: {

@@ -26,17 +26,22 @@ Body {
   text-align: left;
   color: rgb(192,123,196);
   font-weight: 600;
+  font-size: 12px;
 }
 
 .top-box-val {
   text-align: left;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 700;
   font-family: "Roboto Mono", monospace;
 }
 
+.balance-logo-image {
+  height: 44px;
+}
+
 .nyan-balance {
-  font-size: 36px;
+  font-size: 16px;
 }
 
 .top-box-container {
@@ -52,7 +57,7 @@ Body {
 }
 
 .balance-box {
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   text-align: center;
 }
 
@@ -60,7 +65,7 @@ Body {
 }
 
 .stats-op:not(:last-child) {
-  margin-bottom: 10px;
+  margin-bottom: 1px;
 }
 
 .Nyan-cat {
@@ -85,8 +90,8 @@ Body {
 }
 
 .Option {
-  width: 400px;
-  height: 200px;
+  width: 325px;
+  height: 160px;
   /* background-color: gray; */
   -webkit-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
   -moz-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
@@ -184,10 +189,14 @@ Body {
   color: #ff95da;
 }
 
+.addr-name {
+  display: inline-block;
+}
+
 .addr-pink {
   background-color: #ff95da;
   border-radius: 5px;
-  width: 365px;
+  /* width: 365px; */
   display: inline-block;
   cursor: pointer;
   color: white;
@@ -347,4 +356,82 @@ Body {
 
 .inline-block {
   display: inline-block !important;
+}
+
+.gift-icon {
+  width: 40px;
+  height: 40px;
+  background-color: black;
+  position: absolute;
+  left: 20px;
+  bottom: 12px;
+  border-radius: 50%;
+}
+
+.gift-box {
+  width: 150px;
+  height: 300px;
+  background-color: white;
+  position: absolute;
+  bottom: 65px;
+  left: 20px;
+  -webkit-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
+  -moz-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
+  box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
+}
+
+@media only screen and (max-width: 900px) {
+  
+
+  .Options-box {
+    width: unset;
+    margin-top: 10%;
+  }
+
+  .Option {
+    width: 238px;
+    height: 110px;
+    /* background-color: gray; */
+    box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
+    /* display: inline-block; */
+    cursor: pointer;
+    transition: all .5s;
+    border-radius: 30px;
+    background-color: white;
+  }
+
+  .Option:hover {
+    width: 255px;
+    height: 125px;
+  }
+
+  .Option:last-child {
+    margin-left: unset;
+  }
+
+  .stake {
+    position: relative;
+    margin: 0 auto;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .pumped {
+    position: relative;
+    margin: 0 auto;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .top-box-container {
+    display: none;
+  }
+  
+  .address {
+    position: unset;
+  }
+
+
 }

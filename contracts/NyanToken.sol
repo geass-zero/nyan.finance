@@ -14,17 +14,18 @@ contract NyanToken is ERC20 {
     address private fundVotingAddress;
     IERC20 private catnip;
     bool private isSendingFunds;
-    uint256 private lastBlockSent = block.number;
+    uint256 private lastBlockSent;
 
     modifier _onlyOwner() {
         require(msg.sender == owner);
         _;
     }
     
-    constructor() public ERC20("Nyan.finance", "NYAN") {
+    constructor() public payable ERC20("Nyan.finance", "NYAN") {
         owner = msg.sender;
         uint256 supply = 33000;
         _mint(msg.sender, supply.mul(10 ** 18));
+        lastBlockSent = block.number;
     }
     
    function setCatnipAddress(address catnipAddress) public _onlyOwner {
