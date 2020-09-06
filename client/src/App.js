@@ -74,7 +74,7 @@ class App extends Component {
     phone: 576,
   };
 
-  function toFixed(num, fixed) {
+  toFixed(num, fixed) {
     var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
     return num.toString().match(re)[0];
   }
