@@ -74,10 +74,13 @@ class App extends Component {
     phone: 576,
   };
 
-  
+  toFixed(num, fixed) {
+    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+  }
 
   getRoundedNyanBalance() {
-    return parseFloat(this.state.nyanBalance).toFixed(6);
+    return toFixed(this.state.nyanBalance, 6);
   }
 
   getRoundedTotalNyanStaked() {
