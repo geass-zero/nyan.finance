@@ -157,7 +157,7 @@ state = {
             <div>
                 <input 
                 className="input" 
-                placeholder="0"
+                placeholder="Type in the amount you want to stake"
                 value={this.state.stakeAmount} 
                 onChange={this.updateStakingInput.bind(this)}
                 type="number">
