@@ -80,7 +80,7 @@ class App extends Component {
   }
 
   getRoundedNyanBalance() {
-    return toFixed(this.state.nyanBalance, 6);
+    return this.toFixed(this.state.nyanBalance, 6);
   }
 
   getRoundedTotalNyanStaked() {

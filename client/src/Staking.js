@@ -103,6 +103,15 @@ state = {
     }
   }
 
+
+  setInputField() {
+    if (this.state.stakeAmount > 0) {
+      return this.state.stakeAmount;
+    } else {
+      return null
+    }
+  }
+
   getMyStakeAmount = async () => {
     let stakeA = await this.catnipInstance.methods.getAddressStakeAmount(this.accounts[0]).call();
     
@@ -184,8 +193,8 @@ state = {
             <div>
                 <input 
                 className="input" 
-                placeholder="Type in the amount you want to stake"
-                value={this.state.stakeAmount} 
+                placeholder="Type in the amount you want to stake or withdraw"
+                value={this.setInputField()} 
                 onChange={this.updateStakingInput.bind(this)}
                 type="number">
 
