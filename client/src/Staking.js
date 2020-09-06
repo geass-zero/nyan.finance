@@ -40,6 +40,18 @@ state = {
     }
   }
 
+  toFixed(num, fixed) {
+    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+  }
+
+  getNyanBalance = async () => {
+    let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
+    this.setState({
+      stakeAmount: toFixed(this.web3.utils.fromWei(_nyanBalance), 6);
+    })
+  }
+
   stakeNyan = async () => {
     if (this.state.isStaking) {
         return;
