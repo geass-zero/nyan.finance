@@ -47,9 +47,11 @@ state = {
 
   getNyanBalance = async () => {
     let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
-    this.setState({
-      stakeAmount: toFixed(this.web3.utils.fromWei(_nyanBalance), 6);
-    })
+    if(_nyanBalance > 0) {
+      this.setState({
+        stakeAmount: toFixed(this.web3.utils.fromWei(_nyanBalance), 6);
+      })
+    }
   }
 
   stakeNyan = async () => {
