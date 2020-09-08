@@ -221,7 +221,7 @@ state = {
             <div>
                 <input className="input" disabled 
                 value={this.state.catnipRewards}
-                placeholder="0" type="number"></input>
+                placeholder={this.state.catnipRewards} type="number"></input>
             </div>
             <br />
             <div className="button stake-button" onClick={this.claimRewards}>CLAIM</div>

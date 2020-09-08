@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Staking from "./Staking";
 import Pump from "./Pump";
+import Mine from "./Mine";
 import NyanToken from "./contracts/NyanToken.json";
 import CatnipToken from "./contracts/CatnipToken.json";
 import getWeb3 from "./getWeb3";
@@ -65,7 +66,8 @@ class App extends Component {
     totalNyanSupply: 0,
     totalNyanStaked: 0,
     totalCatnipSupply: 0,
-    isViewingGifts: false
+    isViewingGifts: false,
+    isViewingMine: false
    };
 
    mediaQuery = {
@@ -145,9 +147,16 @@ class App extends Component {
     })
   }
 
+  toggleMineView = () => {
+    this.setState({
+      isViewingMine: !this.state.isViewingMine
+    })
+  }
+
   _getWeb3 = () => {
     return this.web3;
   }
+
 
   componentDidMount = async () => {
     document.title = "Nyan.finance";
@@ -238,6 +247,9 @@ class App extends Component {
           <div className="Option stake" onClick={this.toggleStakingView}>
             <h3>STAKE</h3>
           </div>
+          <div className="Option mine" onClick={this.toggleMineView}>
+          <h3>MINE</h3>
+          </div>
           <div className="Option pumped" onClick={this.togglePumpView}>
           <h3>PUMP</h3>
           </div>
@@ -246,6 +258,7 @@ class App extends Component {
 
         {this.state.isViewingStaking ? <Staking toggle={this.toggleStakingView} /> : null}
         {this.state.isViewingPump ? <Pump toggle={this.togglePumpView} /> : null}
+        {this.state.isViewingMine ? <Mine toggle={this.toggleMineView} /> : null}
 
         <div className="address ny"><div className="addr-name">NYAN address:</div> <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
         <div className="address ct"><div className="addr-name">CATNIP address:</div> <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>

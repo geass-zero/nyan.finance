@@ -90,8 +90,8 @@ Body {
 }
 
 .Option {
-  width: 325px;
-  height: 160px;
+  width: 240px;
+  height: 125px;
   /* background-color: gray; */
   -webkit-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
   -moz-box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
@@ -118,8 +118,8 @@ Body {
 }
 
 .Option:hover {
-  width: 410px;
-  height: 210px;
+  width: 265px;
+  height: 140px;
 }
 
 .stake {
@@ -141,6 +141,17 @@ Body {
   background-image: url("./assets/Nyan_pump.gif");
   background-position:  bottom -10px right 0px;
   background-size: 59%;
+  background-repeat: no-repeat;
+}
+
+.mine {
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  font-size: 30px;
+  background-image: url("./assets/Dark_Nyan.gif");
+  background-position:  bottom -2px right 0px;
+  background-size: 43%;
   background-repeat: no-repeat;
 }
 
@@ -315,7 +326,7 @@ Body {
 
 .amount-staked-box {
   background-color: #f2f2f2;
-  width: 250px;
+  width: 97%;
   padding: 10px;
   border-radius: 10px;
 }
@@ -356,6 +367,7 @@ Body {
 
 .inline-block {
   display: inline-block !important;
+  margin-right: 70px;
 }
 
 .gift-icon {
