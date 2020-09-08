@@ -70,6 +70,7 @@ contract DarkNyan is ERC20{
                     
             stakedBalances[account].lastBlockChecked = block.number;
             
+            
             emit Rewards(account, stakedBalances[account].rewards);                                                     
         }
         _;
@@ -86,6 +87,8 @@ contract DarkNyan is ERC20{
     event darkNyanUniWithdrawn(address indexed user, uint256 amount, uint256 totalLiquidityStaked);
     
     event Rewards(address indexed user, uint256 reward);
+    
+    event FundsSentToFundingAddress(address indexed user, uint256 amount);
     
     event votingAddressChanged(address indexed user, address votingAddress);
     
@@ -109,68 +112,63 @@ contract DarkNyan is ERC20{
         owner = newOwner;
     }
     
-    function setVotingAddress(address _account) public {
+    function setVotingAddress(address _account) public _onlyOwner {
         fundVotingAddress = _account;
         emit votingAddressChanged(msg.sender, fundVotingAddress);
     }
     
-    function setCatnipPairAddress(address _uniV2address) public {
+    function setCatnipPairAddress(address _uniV2address) public _onlyOwner {
         catnipUniswapV2Pair = _uniV2address;
+        catnipV2 = IERC20(catnipUniswapV2Pair);
         emit catnipPairAddressChanged(msg.sender, catnipUniswapV2Pair);
     }
 
-    function setdarkNyanPairAddress(address _uniV2address) public {
+    function setdarkNyanPairAddress(address _uniV2address) public _onlyOwner {
         darkNyanUniswapV2Pair = _uniV2address;
+        darkNyanV2 = IERC20(darkNyanUniswapV2Pair);
         emit darkNyanPairAddressChanged(msg.sender, darkNyanUniswapV2Pair);
     }
     
-     function setMiningDifficulty(uint256 amount) public {
+     function setMiningDifficulty(uint256 amount) public _onlyOwner {
        miningDifficulty = amount;
        emit difficultyChanged(msg.sender, miningDifficulty);
    }
     
     function stakeCatnipUni(uint256 amount) public updateStakingReward(msg.sender) {
-        stakedBalances[msg.sender].lastBlockChecked = block.number;
-        catnipV2 = IERC20(catnipUniswapV2Pair);
         catnipV2.transferFrom(msg.sender, address(this), amount);
-        stakedBalances[msg.sender].catnipPoolTokens = stakedBalances[msg.sender].catnipPoolTokens
-                                                                                      .add(stakedBalances[msg.sender].catnipPoolTokens);
+        stakedBalances[msg.sender].catnipPoolTokens = stakedBalances[msg.sender].catnipPoolTokens.add(amount)                                                                                .add(stakedBalances[msg.sender].catnipPoolTokens);
         totalLiquidityStaked = totalLiquidityStaked.add(amount);                                                                              
         emit catnipUniStaked(msg.sender, amount, totalLiquidityStaked);
     }
     
     function withdrawCatnipUni(uint256 amount) public updateStakingReward(msg.sender) {
-        stakedBalances[msg.sender].lastBlockChecked = block.number;
-        catnipV2 = IERC20(catnipUniswapV2Pair);
-        // do a check for user's proper amount
         catnipV2.safeTransfer(msg.sender, amount);
-        stakedBalances[msg.sender].catnipPoolTokens = stakedBalances[msg.sender].catnipPoolTokens
-                                                                                      .sub(stakedBalances[msg.sender].catnipPoolTokens);
+        stakedBalances[msg.sender].catnipPoolTokens = stakedBalances[msg.sender].catnipPoolTokens.sub(amount);
         totalLiquidityStaked = totalLiquidityStaked.sub(amount);                                                                              
         emit catnipUniWithdrawn(msg.sender, amount, totalLiquidityStaked);
     }
     
     
-    // update rewards before updating blockChecked
     function stakeDarkNyanUni(uint256 amount) public updateStakingReward(msg.sender) {
-        stakedBalances[msg.sender].lastBlockChecked = block.number;
-        darkNyanV2 = IERC20(darkNyanUniswapV2Pair);
         darkNyanV2.transferFrom(msg.sender, address(this), amount);
-        stakedBalances[msg.sender].darkNyanPoolTokens = stakedBalances[msg.sender].darkNyanPoolTokens
-                                                                                      .add(stakedBalances[msg.sender].darkNyanPoolTokens);
+        stakedBalances[msg.sender].darkNyanPoolTokens = stakedBalances[msg.sender].darkNyanPoolTokens.add(amount);
         totalLiquidityStaked = totalLiquidityStaked.add(amount);                                                                              
         emit darkNyanUniStaked(msg.sender, amount, totalLiquidityStaked);
     }
     
     function withdrawDarkNyanUni(uint256 amount) public updateStakingReward(msg.sender) {
-        stakedBalances[msg.sender].lastBlockChecked = block.number;
-        darkNyanV2 = IERC20(darkNyanUniswapV2Pair);
-        // do a check for user's proper amount
         darkNyanV2.safeTransfer(msg.sender, amount);
-        stakedBalances[msg.sender].darkNyanPoolTokens = stakedBalances[msg.sender].darkNyanPoolTokens
-                                                                                      .sub(stakedBalances[msg.sender].darkNyanPoolTokens);
+        stakedBalances[msg.sender].darkNyanPoolTokens = stakedBalances[msg.sender].darkNyanPoolTokens.sub(amount);
         totalLiquidityStaked = totalLiquidityStaked.sub(amount);                                                                              
         emit darkNyanUniWithdrawn(msg.sender, amount, totalLiquidityStaked);
+    }
+    
+    function getNipUniStakeAmount(address _account) public view returns (uint256) {
+        return stakedBalances[_account].catnipPoolTokens;
+    }
+    
+    function getDNyanUniStakeAmount(address _account) public view returns (uint256) {
+        return stakedBalances[_account].darkNyanPoolTokens;
     }
     
     function myRewardsBalance(address _account) public view returns(uint256) {
@@ -198,21 +196,21 @@ contract DarkNyan is ERC20{
        stakedBalances[msg.sender].rewards = 0;
        _mint(msg.sender, reward.mul(8) / 10);
        uint256 fundingPoolReward = reward.mul(2) / 10;
-       _mint(fundVotingAddress, fundingPoolReward);
+       _mint(address(this), fundingPoolReward);
        emit Rewards(msg.sender, reward);
     }
     
-    function toggleFundsTransfer() public {
+    function toggleFundsTransfer() public _onlyOwner {
         isSendingFunds = !isSendingFunds;
     }
     
     function sendDarkNyanToFund(uint256 amount) public {
-        // check if isSendingFunds is true
         if (!isSendingFunds) {
             return;
         }
-        
-        darkNyan.safeTransfer(fundVotingAddress, amount);
+        lastBlockSent = block.number;
+        darkNyanV2.safeTransfer(fundVotingAddress, amount);
+        emit FundsSentToFundingAddress(msg.sender, amount);
     }
     
     

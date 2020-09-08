@@ -41,7 +41,7 @@ state = {
   }
 
   stakeNyan = async () => {
-    if (this.state.isStaking) {
+    if (this.state.isStaking || this.state.stakeAmount === 0) {
         return;
     }                        
     this.setState({isStaking: true});
@@ -50,7 +50,7 @@ state = {
             from: this.accounts[0]
         });
         if (stakeRes["status"]) {
-            this.setState({isStaking: false, isApproved: false, stakeAmount: 0});
+            this.setState({isStaking: false, stakeAmount: 0});
             this.getMyStakeAmount();
         }
     } catch (error) {
@@ -60,7 +60,7 @@ state = {
   }
 
   withdrawNyan = async () => {
-    if (this.state.isWithdrawing) {
+    if (this.state.isWithdrawing || this.state.stakeAmount === 0) {
         return;
     }
     this.setState({isWithdrawing: true});

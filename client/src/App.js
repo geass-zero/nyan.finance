@@ -107,6 +107,7 @@ class App extends Component {
       totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
     })
   }
+  
 
   totalNyanStaked = async () => {
    let _totalNyanStaked = await this.catnipInstance.methods.totalStakedSupply().call();

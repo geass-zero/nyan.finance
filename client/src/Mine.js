@@ -1,4 +1,10 @@
 import React, { Component } from "react";
+import CatnipToken from "./contracts/CatnipToken.json";
+import DarkNyan from "./contracts/DarkNyan.json";
+import DarkNyanUni from "./contracts/DarkNyanUni.json";
+import getWeb3 from "./getWeb3";
+import {setWeb3, getWeb3Var} from "./shared";
+import App from "./App";
 
 import ethLogo from './assets/eth.png';
 import catnipLogo from './assets/catnip.png';
@@ -8,18 +14,132 @@ state = {
     loaded: false,
     stakeAmount: 0,
     stakedAmount: 0,
-    miningStarted: false,
-    isApproved: true,
+    dUniAmount: 0,
+    miningStarted: true,
+    isApproved: false,
     isApproving: false,
     isStaking: false,
     isWithdrawing: false,
     darkNyanRewards: 0,
-    totalNyanSupply: 0,
+    totalDNyanUniSupply: 0,
     allowance: 0
     };
 
   handleClick = () => {
     this.props.toggle();
+  };
+
+  getDUniAmount = async () => {
+    let _dUniAmount = await this.DarkNyanUniInstance.methods.balanceOf(this.accounts[0]).call();
+    this.setState({
+      dUniAmount: this.web3.utils.fromWei(_dUniAmount)
+    })
+  }
+
+  getDNyanUniAllowance = async () => {
+    let _dUniAllowance = await this.DarkNyanUniInstance.methods.allowance(this.accounts[0], this.darkNyanInstance._address).call();
+    if (_dUniAllowance > 0) {
+        this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_dUniAllowance.toString())});
+        
+    }
+    console.log(this.state.allowance);
+  }
+
+  getDNyanSupply = async () => {
+    let _dNyanSupply = await this.darkNyanInstance.methods.totalSupply().call();
+    this.setState({
+      totalDNyanUniSupply: this.web3.utils.fromWei(_dNyanSupply)
+    })
+  }
+
+  approveDNyanUni = async () => {
+    if (this.state.isApproving) {
+        return;
+    }  
+    this.setState({isApproving: true});
+    
+    try {
+        let approveStaking = await this.DarkNyanUniInstance.methods.approve(this.darkNyanInstance._address, this.web3.utils.toWei(this.state.totalDNyanUniSupply.toString())).send({
+            from: this.accounts[0]
+        });
+        
+        if (approveStaking["status"]) {
+            this.setState({isApproving: false, isApproved: true});
+        } 
+    } catch {
+        this.setState({isApproving: false, isApproved: false});
+    }
+  }
+
+  getDNyanUniStakeAmount = async () => {
+    let stakeA = await this.darkNyanInstance.methods.getNipUniStakeAmount(this.accounts[0]).call();
+    
+    this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
+  }
+
+  stakeDNyanUni = async () => {
+    if (this.state.isStaking || this.state.stakeAmount === 0) {
+        return;
+    }                        
+    this.setState({isStaking: true});
+    try {
+        let stakeRes = await this.darkNyanInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+            from: this.accounts[0]
+        });
+        if (stakeRes["status"]) {
+            this.setState({isStaking: false, stakeAmount: 0});
+            this.getDNyanUniStakeAmount();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
+
+
+  componentDidMount = async () => {
+
+    try {
+      this.web3 = getWeb3Var();
+        
+      // Get network provider and web3 instance.
+     
+      // Use web3 to get the user's accounts.
+      this.accounts = await this.web3.eth.getAccounts();
+    
+      // Get the contract instance.
+      this.networkId = await this.web3.eth.net.getId();
+
+      console.log(this.web3.eth)
+
+      this.DarkNyanUniInstance = new this.web3.eth.Contract(
+        DarkNyanUni,
+        "0xdB8C25B309Df6bd93d361ad19ef1C5cE5A667d6A"
+      );
+
+
+      this.darkNyanInstance = new this.web3.eth.Contract(
+        DarkNyan.abi,
+        "0x803f97cb3ded78c49cc882fb2a176ce11cdee050",
+      );
+
+      
+      this.getDNyanSupply();
+      this.getDNyanUniAllowance();
+      this.getDUniAmount();
+    //   this.getMyStakeAmount();
+    //   this.getCatnipRewards();
+
+      // Set web3, accounts, and contract to the state, and then proceed with an
+      // example of interacting with the contract's methods.
+      this.setState({loaded: true});
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
   };
 
   render() {
@@ -56,7 +176,7 @@ state = {
             </div>
             <div className="inline-block">
               <div className="top-box-desc">Amount in Wallet</div>
-              <div className="top-box-val nyan-balance">0</div>
+    <div className="top-box-val nyan-balance">{this.state.dUniAmount}</div>
             </div>
             <div className="inline-block">
               <div className="top-box-desc">Amount staked</div>
@@ -77,11 +197,15 @@ state = {
             {!this.state.miningStarted ? <div className="button stake-button">
                 {!this.state.isStaking ? <div>MINING HAS NOT STARTED</div> : null}
             </div> : null}
+            {!this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.approveDNyanUni}>
+                {!this.state.isApproving ? <div>APPROVE</div> : null}
+                {this.state.isApproving ? <div>APPROVING...</div> : null}
+            </div> : null}
             {this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.stakeNyan}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
-            {this.miningStarted ? <div className="button withdraw-button" onClick={this.withdrawNyan}>
+            {this.state.miningStarted ? <div className="button withdraw-button" onClick={this.withdrawNyan}>
                 {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
                 {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
             </div> : null}
