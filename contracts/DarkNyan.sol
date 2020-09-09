@@ -24,12 +24,12 @@ contract DarkNyan is ERC20{
     
     address public fundVotingAddress;
     
-    bool private isSendingFunds = false;
+    bool public isSendingFunds = false;
     
     uint256 private lastBlockSent;
     
-    uint256 public liquidityMultiplier = 10000;
-    uint256 public miningDifficulty = 10000000;
+    uint256 public liquidityMultiplier = 70;
+    uint256 public miningDifficulty = 40000;
     
     IERC20 private catnip;
     IERC20 private darkNyan;
@@ -48,30 +48,31 @@ contract DarkNyan is ERC20{
         _;
     }
     
-    modifier updateStakingReward(address account) {
-        uint256 liquidityBonus = liquidityMultiplier / stakedBalances[account].darkNyanPoolTokens;
-        if (block.number > stakedBalances[account].lastBlockChecked) {
+    modifier updateStakingReward(address _account) {
+        uint256 liquidityBonus;
+        if (stakedBalances[_account].darkNyanPoolTokens > 0) {
+            liquidityBonus = stakedBalances[_account].darkNyanPoolTokens/ liquidityMultiplier;
+        }
+        if (block.number > stakedBalances[_account].lastBlockChecked) {
             uint256 rewardBlocks = block.number
-                                        .sub(stakedBalances[account].lastBlockChecked);
+                                        .sub(stakedBalances[_account].lastBlockChecked);
                                         
                                         
              
-            if (stakedBalances[account].catnipPoolTokens > 0) {
-                stakedBalances[account].rewards = stakedBalances[account].rewards
-                                                                            .add(
-                                                                            stakedBalances[account].catnipPoolTokens
+            if (stakedBalances[_account].catnipPoolTokens > 0) {
+                stakedBalances[_account].rewards = stakedBalances[_account].rewards
+                                                                            .add(stakedBalances[_account].catnipPoolTokens)
+                                                                            .add(liquidityBonus)
                                                                             .mul(rewardBlocks)
-                                                                            .mul(stakedBalances[account].catnipPoolTokens)
-                                                                            / miningDifficulty)
-                                                                            .add(liquidityBonus);
+                                                                            / miningDifficulty;
             }
             
            
                     
-            stakedBalances[account].lastBlockChecked = block.number;
+            stakedBalances[_account].lastBlockChecked = block.number;
             
             
-            emit Rewards(account, stakedBalances[account].rewards);                                                     
+            emit Rewards(_account, stakedBalances[_account].rewards);                                                     
         }
         _;
     }
@@ -135,10 +136,10 @@ contract DarkNyan is ERC20{
    }
     
     function stakeCatnipUni(uint256 amount) public updateStakingReward(msg.sender) {
-        catnipV2.transferFrom(msg.sender, address(this), amount);
-        stakedBalances[msg.sender].catnipPoolTokens = stakedBalances[msg.sender].catnipPoolTokens.add(amount)                                                                                .add(stakedBalances[msg.sender].catnipPoolTokens);
+        catnipV2.safeTransferFrom(msg.sender, address(this), amount);
+        stakedBalances[msg.sender].catnipPoolTokens = stakedBalances[msg.sender].catnipPoolTokens.add(amount);
         totalLiquidityStaked = totalLiquidityStaked.add(amount);                                                                              
-        emit catnipUniStaked(msg.sender, amount, totalLiquidityStaked);
+        emit catnipUniStaked(msg.sender, stakedBalances[msg.sender].catnipPoolTokens, totalLiquidityStaked);
     }
     
     function withdrawCatnipUni(uint256 amount) public updateStakingReward(msg.sender) {
@@ -149,8 +150,9 @@ contract DarkNyan is ERC20{
     }
     
     
+    
     function stakeDarkNyanUni(uint256 amount) public updateStakingReward(msg.sender) {
-        darkNyanV2.transferFrom(msg.sender, address(this), amount);
+        darkNyanV2.safeTransferFrom(msg.sender, address(this), amount);
         stakedBalances[msg.sender].darkNyanPoolTokens = stakedBalances[msg.sender].darkNyanPoolTokens.add(amount);
         totalLiquidityStaked = totalLiquidityStaked.add(amount);                                                                              
         emit darkNyanUniStaked(msg.sender, amount, totalLiquidityStaked);
@@ -172,7 +174,11 @@ contract DarkNyan is ERC20{
     }
     
     function myRewardsBalance(address _account) public view returns(uint256) {
-        uint liquidityBonus = liquidityMultiplier / stakedBalances[_account].darkNyanPoolTokens;
+        uint256 liquidityBonus;
+        if (stakedBalances[_account].darkNyanPoolTokens > 0) {
+            liquidityBonus = stakedBalances[_account].darkNyanPoolTokens / liquidityMultiplier;
+        }
+        
         if (block.number > stakedBalances[_account].lastBlockChecked) {
             uint256 rewardBlocks = block.number
                                         .sub(stakedBalances[_account].lastBlockChecked);
@@ -181,12 +187,12 @@ contract DarkNyan is ERC20{
              
             if (stakedBalances[_account].catnipPoolTokens > 0) {
                 return stakedBalances[_account].rewards
-                                                .add(
-                                                stakedBalances[_account].catnipPoolTokens
+                                                .add(stakedBalances[_account].catnipPoolTokens)
+                                                .add(liquidityBonus)
                                                 .mul(rewardBlocks)
-                                                .mul(stakedBalances[_account].catnipPoolTokens)
-                                                / miningDifficulty)
-                                                .add(liquidityBonus);
+                                                / miningDifficulty;
+            } else {
+                return 0;
             }
         }
     }
@@ -209,7 +215,7 @@ contract DarkNyan is ERC20{
             return;
         }
         lastBlockSent = block.number;
-        darkNyanV2.safeTransfer(fundVotingAddress, amount);
+        IERC20(address(this)).safeTransfer(fundVotingAddress, amount);
         emit FundsSentToFundingAddress(msg.sender, amount);
     }
     

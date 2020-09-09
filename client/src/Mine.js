@@ -29,6 +29,21 @@ state = {
     this.props.toggle();
   };
 
+  setInputField() {
+    if (this.state.stakeAmount > 0) {
+      return this.state.stakeAmount;
+    } else {
+      return null
+    }
+  }
+
+  updateStakingInput(e) {
+    this.setState({stakeAmount: e.target.value})
+    if (this.state.stakeAmount > this.state.allowance) {
+        this.setState({isApproved: false})
+    }
+ }
+
   getDUniAmount = async () => {
     let _dUniAmount = await this.DarkNyanUniInstance.methods.balanceOf(this.accounts[0]).call();
     this.setState({
@@ -73,7 +88,7 @@ state = {
 
   getDNyanUniStakeAmount = async () => {
     let stakeA = await this.darkNyanInstance.methods.getNipUniStakeAmount(this.accounts[0]).call();
-    
+    console.log(stakeA);
     this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
   }
 
@@ -82,8 +97,9 @@ state = {
         return;
     }                        
     this.setState({isStaking: true});
+    console.log(this.web3.utils.toWei(this.state.stakeAmount.toString()));
     try {
-        let stakeRes = await this.darkNyanInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+        let stakeRes = await this.darkNyanInstance.methods.stakeCatnipUni(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
             from: this.accounts[0]
         });
         if (stakeRes["status"]) {
@@ -91,6 +107,7 @@ state = {
             this.getDNyanUniStakeAmount();
         }
     } catch (error) {
+        this.setState({isStaking: false});
         console.log(error);
     }
   }
@@ -120,10 +137,10 @@ state = {
 
       this.darkNyanInstance = new this.web3.eth.Contract(
         DarkNyan.abi,
-        "0x803f97cb3ded78c49cc882fb2a176ce11cdee050",
+        "0x23b7f3a35bda036e3b59a945e441e041e6b11101",
       );
 
-      
+      this.getDNyanUniStakeAmount();
       this.getDNyanSupply();
       this.getDNyanUniAllowance();
       this.getDUniAmount();
@@ -180,15 +197,15 @@ state = {
             </div>
             <div className="inline-block">
               <div className="top-box-desc">Amount staked</div>
-              <div className="top-box-val nyan-balance">0</div>
+    <div className="top-box-val nyan-balance">{this.state.stakedAmount}</div>
             </div>
           </div>
           <div>
             <input 
             className="input" 
             placeholder="Type in the amount you want to stake or withdraw"
-            // value={this.setInputField()} 
-            // onChange={this.updateStakingInput.bind(this)}
+            value={this.setInputField()} 
+            onChange={this.updateStakingInput.bind(this)}
             type="number">
 
             </input>
@@ -201,7 +218,7 @@ state = {
                 {!this.state.isApproving ? <div>APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.stakeNyan}>
+            {this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.stakeDNyanUni}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
