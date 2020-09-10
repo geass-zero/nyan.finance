@@ -131,9 +131,6 @@ class App extends Component {
      });
    }
 
-   
-   
-
    toggleStakingView = () => {
     this.setState({
       isViewingStaking: !this.state.isViewingStaking
@@ -160,6 +157,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     document.title = "Nyan.finance";
+    console.log(process.env);
 
     try {
       // // Get network provider and web3 instance.
@@ -187,12 +185,12 @@ class App extends Component {
      
       this.nyanInstance = new this.web3.eth.Contract(
         NyanToken.abi,
-        "0xc9ce70a381910d0a90b30d408cc9c7705ee882de"
+        process.env.REACT_APP_NYAN_TOKEN_CONTRACT_ADDRESS
       );
      
       this.catnipInstance = new this.web3.eth.Contract(
         CatnipToken.abi,
-        "0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113",
+        process.env.REACT_APP_CATNIP_TOKEN_CONTRACT_ADDRESS
       );
 
       setWeb3(this.web3);

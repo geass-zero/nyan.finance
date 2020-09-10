@@ -24,24 +24,64 @@ state = {
     this.props.toggle();
   };
 
-  updateStakingInput(e) {
-    this.setState({stakeAmount: e.target.value})
-    if (this.state.stakeAmount > this.state.allowance) {
-        this.setState({isApproved: false})
-    }
- }
-
- getAllowance = async () => {
+  /** getters */
+  getAllowance = async () => {
     let _nyanAllowance = await this.nyanInstance.methods.allowance(this.accounts[0], this.catnipInstance._address).call();
     if (_nyanAllowance > 0) {
         this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_nyanAllowance.toString())})
     }
   }
 
+  getNyanBalance = async () => {
+    let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
+    this.setState({
+      nyanBalance: this.web3.utils.fromWei(_nyanBalance)
+    })
+  }
+
+  getNyanSupply = async () => {
+    let _nyanSupply = await this.nyanInstance.methods.totalSupply().call();
+    this.setState({
+      totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
+    })
+  }
+
+  getMyStakeAmount = async () => {
+    let stakeA = await this.catnipInstance.methods.getAddressStakeAmount(this.accounts[0]).call();
+    
+    this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
+  }
+
+  getCatnipRewards = async () => {
+    
+    let cRewards = await this.catnipInstance.methods.myRewardsBalance(this.accounts[0]).call();
+
+    this.setState({catnipRewards: this.web3.utils.fromWei(cRewards)});
+  }
+
+  /** setters & modifiers */
+  updateStakingInput(e) {
+    this.setState({stakeAmount: e.target.value})
+    
+    if (this.state.stakeAmount > this.state.allowance || this.state.nyanBalance){
+      // disable button
+      
+    } else {
+      // enable button
+    }
+    
+    /*
+    if (this.state.stakeAmount > this.state.allowance && !this.state.isApproved) {
+        this.setState({isApproved: false})
+    }
+    */
+  }
+
   stakeNyan = async () => {
-    if (this.state.isStaking || this.state.stakeAmount === 0) {
+    if ((this.state.isStaking || this.state.stakeAmount === 0) || (this.state.stakeAmount > this.state.nyanBalance)) {
         return;
-    }                        
+    }
+
     this.setState({isStaking: true});
     try {
         let stakeRes = await this.catnipInstance.methods.stake(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
@@ -54,7 +94,6 @@ state = {
     } catch (error) {
         console.log(error);
     }
-
   }
 
   withdrawNyan = async () => {
@@ -78,13 +117,6 @@ state = {
     }
   }
 
-  getNyanSupply = async () => {
-    let _nyanSupply = await this.nyanInstance.methods.totalSupply().call();
-    this.setState({
-      totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
-    })
-  }
-
   approveNyan = async () => {
     if (this.state.isApproving) {
         return;
@@ -101,34 +133,26 @@ state = {
     }
   }
 
-
   setInputField() {
     if (this.state.stakeAmount > 0) {
       return this.state.stakeAmount;
     } else {
-      return null
+      return '';
     }
   }
 
-  getMyStakeAmount = async () => {
-    let stakeA = await this.catnipInstance.methods.getAddressStakeAmount(this.accounts[0]).call();
-    
-    this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
-  }
-
-  getCatnipRewards = async () => {
-    
-    let cRewards = await this.catnipInstance.methods.myRewardsBalance(this.accounts[0]).call();
-
-    this.setState({catnipRewards: this.web3.utils.fromWei(cRewards)});
+  setMaxNyan() {
+    this.setState({stakeAmount: this.state.nyanBalance});
   }
 
   claimRewards = async () => {
-    await this.catnipInstance.methods.getReward().send({
+    if(this.state.catnipRewards > 0){
+      await this.catnipInstance.methods.getReward().send({
         from: this.accounts[0]
-    });
-    
-    this.getCatnipRewards();
+      });
+      
+      this.getCatnipRewards();
+    }
   }
 
   componentDidMount = async () => {
@@ -146,16 +170,17 @@ state = {
 
       this.nyanInstance = new this.web3.eth.Contract(
         NyanToken.abi,
-        "0xc9ce70a381910d0a90b30d408cc9c7705ee882de"
+        process.env.REACT_APP_NYAN_TOKEN_CONTRACT_ADDRESS
       );
-
+     
       this.catnipInstance = new this.web3.eth.Contract(
         CatnipToken.abi,
-        "0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113",
+        process.env.REACT_APP_CATNIP_TOKEN_CONTRACT_ADDRESS
       );
 
       this.getAllowance();
-      this.getNyanSupply()
+      this.getNyanSupply();
+      this.getNyanBalance();
       this.getMyStakeAmount();
       this.getCatnipRewards();
 
@@ -187,42 +212,56 @@ state = {
               <div className="top-box-desc">Amount staked</div>
               <div className="top-box-val nyan-balance">{this.state.stakedAmount}</div>
             </div>
+            <div className="inline-block">
+              <div className="top-box-desc">Your  NYAN balance</div>
+              <div className="top-box-val nyan-balance">{this.state.nyanBalance}</div>
+            </div>
           </div>
+            <div className="max-container">
+              <button className="as-link" onClick={this.setMaxNyan.bind(this)}>Max amount</button>
+            </div>
             <div>
                 <input 
-                className="input" 
-                placeholder="Type in the amount you want to stake or withdraw"
+                className="input-amount" 
+                placeholder="Amount..."
                 value={this.setInputField()} 
                 onChange={this.updateStakingInput.bind(this)}
-                type="number">
-
+                type="number"
+                autoFocus={true}>
                 </input>
             </div>
             <br />
             {!this.state.isApproved ? <div className="button stake-button" onClick={this.approveNyan}>
-                {!this.state.isApproving ? <div>STEP 1: APPROVE</div> : null}
+                {!this.state.isApproving ? <div>STEP 1/2: APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved ? <div className="button stake-button" onClick={this.stakeNyan}>
-                {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
+            {this.state.isApproved ? <div className={`button stake-button ${this.state.stakeAmount > 0 && this.state.stakeAmount < this.state.nyanBalance ? "" : "disabled"}`} onClick={this.stakeNyan}>
+                {!this.state.isStaking ? <div>STEP 2/2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
-            <div className="button withdraw-button" onClick={this.withdrawNyan}>
+            <div className={`button withdraw-button ${this.state.nyanBalance > 0 || this.state.stakeAmount > 0 && this.state.stakeAmount <= this.state.stakedAmount ? "" : "disabled"}`} onClick={this.withdrawNyan}>
                 {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
                 {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
             </div>
 
-            <h1>GET CATNIP</h1>
-            <div className="updateC" onClick={this.getCatnipRewards}>UPDATE</div>
+            <div>
+              <div className="align-left"><h1>GET CATNIP</h1></div>
+              <div className="align-right max-container">
+                <button className="as-link" onClick={this.getCatnipRewards}>UPDATE</button>
+              </div>
+              <div className="clear"></div>
+            </div>
+            <div>
             <p>INFO: Catnip rewards grow per block and are updated on each transaction(send) to functions 
                 with the "updateStakingRewards" modifier.</p>
+            </div>
             <div>
                 <input className="input" disabled 
                 value={this.state.catnipRewards}
                 placeholder={this.state.catnipRewards} type="number"></input>
             </div>
             <br />
-            <div className="button stake-button" onClick={this.claimRewards}>CLAIM</div>
+            <div className={`button stake-button ${this.state.catnipRewards > 0 ? "" : "disabled"}`} onClick={this.claimRewards}>CLAIM</div>
         </div>
       </div>
     );
