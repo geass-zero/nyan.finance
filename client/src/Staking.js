@@ -205,7 +205,7 @@ state = {
                 {!this.state.isApproving ? <div>STEP 1: APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved ? <div className="button stake-button" onClick={this.stakeNyan}>
+            {this.state.isApproved ? <div className="button stake-button" onClick={this.stakeNyan} style={{ opacity: this.state.stakeAmount > 0 ? '1' : '0.4'}}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
