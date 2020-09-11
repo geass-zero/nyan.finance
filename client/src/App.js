@@ -5,7 +5,7 @@ import Mine from "./Mine";
 import NyanToken from "./contracts/NyanToken.json";
 import CatnipToken from "./contracts/CatnipToken.json";
 import getWeb3 from "./getWeb3";
-import {setWeb3, getWeb3Var} from "./shared";
+import {setWeb3} from "./shared";
 
 import "./App.css";
 
@@ -14,8 +14,8 @@ import nyanLogo from './assets/nyan-logo.png';
 
 import Web3 from "web3";
 
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
+//import WalletConnect from "@walletconnect/client";
+//import QRCodeModal from "@walletconnect/qrcode-modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 // // Create a connector
@@ -77,7 +77,7 @@ class App extends Component {
   };
 
   toFixed(num, fixed) {
-    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+    var re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
     return num.toString().match(re)[0];
   }
 
@@ -107,7 +107,6 @@ class App extends Component {
       totalNyanSupply: this.web3.utils.fromWei(_nyanSupply)
     })
   }
-  
 
   totalNyanStaked = async () => {
    let _totalNyanStaked = await this.catnipInstance.methods.totalStakedSupply().call();
@@ -126,7 +125,7 @@ class App extends Component {
 }
 
    setNyanAddress = async () => {
-     let addressSet = await this.catnipInstance.methods.setNyanAddress(this.nyanInstance._address).send({
+     await this.catnipInstance.methods.setNyanAddress(this.nyanInstance._address).send({
       from: this.accounts[0],
       gas: 1000000
      });
@@ -224,7 +223,7 @@ class App extends Component {
         <div className="Logo">NYAN.FINANCE</div>
         <div className="top-box-container">
           <div className="top-box balance-box">
-            <img className="balance-logo-image" src={nyanLogo}/>
+            <img className="balance-logo-image" alt="balance logo" src={nyanLogo}/>
             <div className="top-box-desc">Your NYAN Balance</div>
             <div className="top-box-val nyan-balance">{this.getRoundedNyanBalance()}</div>
           </div>
@@ -267,13 +266,13 @@ class App extends Component {
           <a href="https://etherscan.io/token/0xc9ce70a381910d0a90b30d408cc9c7705ee882de">NYAN Token Etherscan</a> . <a href="https://uniswap.info/pair/0x544cd63c9a3363dab66733bf8073cb981db58cba">NYAN-ETH Uniswap</a>
         </div>
         <div className="social-box">
-            <a target="_blank" href={"https://github.com/geass-zero/nyan.finance"}>
+            <a target="_blank" rel="noopener noreferrer" href={"https://github.com/geass-zero/nyan.finance"}>
               <div className="social-icon git"></div>
             </a>
-            <a target="_blank" href={"https://www.twitter.com/nyanfinance"}>
+            <a target="_blank" rel="noopener noreferrer" href={"https://www.twitter.com/nyanfinance"}>
               <div className="social-icon twit"></div>
             </a> 
-            <a target="_blank" href={"https://t.me/nyanfinance"}>
+            <a target="_blank" rel="noopener noreferrer" href={"https://t.me/nyanfinance"}>
               <div className="social-icon tele"></div>
             </a>
 

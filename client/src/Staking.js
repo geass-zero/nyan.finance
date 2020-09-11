@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import NyanToken from "./contracts/NyanToken.json";
 import CatnipToken from "./contracts/CatnipToken.json";
-import getWeb3 from "./getWeb3";
-import {setWeb3, getWeb3Var} from "./shared";
-import App from "./App";
+import {getWeb3Var} from "./shared";
 
 import nyanLogo from './assets/nyan-logo.png';
 
@@ -140,7 +138,7 @@ state = {
   }
 
   claimRewards = async () => {
-    let claim = await this.catnipInstance.methods.getReward().send({
+    await this.catnipInstance.methods.getReward().send({
         from: this.accounts[0]
     });
     
@@ -197,7 +195,7 @@ state = {
           <h1>STAKE NYAN</h1>
           <div className="amount-staked-box">
             <div className="inline-block amount-staked-image">
-              <img className="balance-logo-image" src={nyanLogo}/>
+              <img className="balance-logo-image" alt="nyan logo" src={nyanLogo}/>
             </div>
             <div className="inline-block">
               <div className="top-box-desc">Amount staked</div>

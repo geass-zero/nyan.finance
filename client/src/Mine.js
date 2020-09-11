@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import CatnipToken from "./contracts/CatnipToken.json";
 import DarkNyan from "./contracts/DarkNyan.json";
 import DarkNyanUni from "./contracts/DarkNyanUni.json";
-import getWeb3 from "./getWeb3";
-import {setWeb3, getWeb3Var} from "./shared";
-import App from "./App";
+import {getWeb3Var} from "./shared";
 
 import ethLogo from './assets/eth.png';
 import catnipLogo from './assets/catnip.png';
