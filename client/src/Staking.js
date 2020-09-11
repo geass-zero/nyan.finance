@@ -38,6 +38,20 @@ state = {
     }
   }
 
+  toFixed(num, fixed) {
+    var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+  }
+
+  getNyanBalance = async () => {
+    let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
+    if(_nyanBalance > 0) {
+      this.setState({
+        stakeAmount: toFixed(this.web3.utils.fromWei(_nyanBalance), 6);
+      })
+    }
+  }
+
   stakeNyan = async () => {
     if (this.state.isStaking || this.state.stakeAmount === 0) {
         return;
@@ -203,7 +217,7 @@ state = {
                 {!this.state.isApproving ? <div>STEP 1: APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved ? <div className="button stake-button" onClick={this.stakeNyan}>
+            {this.state.isApproved ? <div className="button stake-button" onClick={this.stakeNyan} style={{ opacity: this.state.stakeAmount > 0 ? '1' : '0.4'}}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}

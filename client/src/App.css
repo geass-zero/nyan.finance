@@ -40,6 +40,14 @@ Body {
   height: 44px;
 }
 
+.reward-logo-image {
+  margin-right: 49px;
+  top: 10px;
+  left: 24px;
+  height: 44px;
+  position: relative;
+}
+
 .nyan-balance {
   font-size: 16px;
 }
@@ -328,7 +336,6 @@ Body {
   background-color: #f2f2f2;
   width: 97%;
   padding: 10px;
-  border-radius: 10px;
 }
 
 .amount-staked-image {
