@@ -195,7 +195,6 @@ state = {
       console.error(error);
     }
   };
-
   render() {
     return (
       <div className="modal">

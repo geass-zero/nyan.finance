@@ -5,6 +5,7 @@ import {getWeb3Var} from "./shared";
 
 import ethLogo from './assets/eth.png';
 import catnipLogo from './assets/catnip.png';
+import dNyanLogo from './assets/dNyan.png';
 
 export default class Pump extends Component {
 state = {
@@ -19,7 +20,8 @@ state = {
     isWithdrawing: false,
     darkNyanRewards: 0,
     totalDNyanUniSupply: 0,
-    allowance: 0
+    allowance: 0,
+    isClaiming: false
     };
 
   handleClick = () => {
@@ -89,6 +91,24 @@ state = {
     this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
   }
 
+  getRewardsAmount = async () => {
+    let rewards = await this.darkNyanInstance.methods.myRewardsBalance(this.accounts[0]).call();
+
+    this.setState({darkNyanRewards: this.web3.utils.fromWei(rewards)});
+  }
+
+  getReward = async () => {
+    this.setState({isClaiming: true});
+    
+    let myRewards = await this.darkNyanInstance.methods.getReward().send({
+        from: this.accounts[0]
+    });
+    
+    if (myRewards["status"]) {
+        this.setState({isClaiming: false, darkNyanRewards: 0});   
+    }
+  }
+
   stakeDNyanUni = async () => {
     if (this.state.isStaking || this.state.stakeAmount === 0) {
         return;
@@ -101,6 +121,26 @@ state = {
         });
         if (stakeRes["status"]) {
             this.setState({isStaking: false, stakeAmount: 0});
+            this.getDNyanUniStakeAmount();
+        }
+    } catch (error) {
+        this.setState({isStaking: false});
+        console.log(error);
+    }
+  }
+
+  withdrawNipUni = async () => {
+    if (this.state.isWithdrawing || this.state.stakeAmount === 0) {
+      return;
+    }                        
+    this.setState({isWithdrawing: true});
+    
+    try {
+      let stakeRes = await this.darkNyanInstance.methods.withdrawCatnipUni(this.web3.utils.toWei(this.state.stakeAmount.toString())).send({
+        from: this.accounts[0]
+      });
+        if (stakeRes["status"]) {
+            this.setState({isWithdrawing: false, stakeAmount: 0});
             this.getDNyanUniStakeAmount();
         }
     } catch (error) {
@@ -141,6 +181,8 @@ state = {
       this.getDNyanSupply();
       this.getDNyanUniAllowance();
       this.getDUniAmount();
+      this.getRewardsAmount();
+
     //   this.getMyStakeAmount();
     //   this.getCatnipRewards();
 
@@ -183,20 +225,30 @@ state = {
             </div>
             
             <div className="amount-staked-box">
-            <div className="inline-block amount-staked-image">
-              <img className="balance-logo-image" alt="nyan logo" src={catnipLogo}/>
-              /
-              <img className="balance-logo-image" alt="eth logo" src={ethLogo}/>
+              <div className="inline-block amount-staked-image">
+                <img className="balance-logo-image" src={catnipLogo}/>
+                /
+                <img className="balance-logo-image" src={ethLogo}/>
+              </div>
+              <div className="inline-block">
+                <div className="top-box-desc">Amount in Wallet</div>
+                <div className="top-box-val nyan-balance">{this.state.dUniAmount}</div>
+              </div>
+              <div className="inline-block">
+                <div className="top-box-desc">Amount staked</div>
+                <div className="top-box-val nyan-balance">{this.state.stakedAmount}</div>
+              </div>
             </div>
-            <div className="inline-block">
-              <div className="top-box-desc">Amount in Wallet</div>
-    <div className="top-box-val nyan-balance">{this.state.dUniAmount}</div>
+
+            <div className="amount-staked-box">
+              <div className="inline-block amount-staked-image">
+                <img className="reward-logo-image" src={dNyanLogo}/>
+              </div>
+              <div className="inline-block">
+                <div className="top-box-desc">darkNyan Rewards</div>
+                <div className="top-box-val nyan-balance">{this.state.darkNyanRewards}</div>
+              </div>
             </div>
-            <div className="inline-block">
-              <div className="top-box-desc">Amount staked</div>
-    <div className="top-box-val nyan-balance">{this.state.stakedAmount}</div>
-            </div>
-          </div>
           <div>
             <input 
             className="input" 
@@ -215,11 +267,15 @@ state = {
                 {!this.state.isApproving ? <div>APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
-            {this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.stakeDNyanUni}>
+            {this.state.miningStarted && (this.state.darkNyanRewards > 0.001 || this.state.darkNyanRewards == null) ? <div className="button stake-button" onClick={this.getReward}>
+                {!this.state.isClaiming ? <div>CLAIM REWARDS</div> : null}
+                {this.state.isClaiming ? <div>CLAIMING...</div> : null}
+            </div> : null}
+            {this.state.isApproved && this.state.miningStarted && this.state.darkNyanRewards < 0.001 ? <div className="button stake-button" onClick={this.stakeDNyanUni}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
-            {this.state.miningStarted ? <div className="button withdraw-button" onClick={this.withdrawNyan}>
+            {this.state.miningStarted ? <div className="button withdraw-button" onClick={this.withdrawNipUni}>
                 {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
                 {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
             </div> : null}
