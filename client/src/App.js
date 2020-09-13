@@ -157,7 +157,6 @@ class App extends Component {
 
   componentDidMount = async () => {
     document.title = "Nyan.finance";
-    console.log(process.env);
 
     try {
       // // Get network provider and web3 instance.
@@ -260,6 +259,7 @@ class App extends Component {
 
         <div className="address ny"><div className="addr-name">NYAN address:</div> <div className="addr-pink">0xc9ce70a381910d0a90b30d408cc9c7705ee882de</div></div>
         <div className="address ct"><div className="addr-name">CATNIP address:</div> <div className="addr-pink">0xd2b93f66fd68c5572bfb8ebf45e2bd7968b38113</div> </div>
+        <div className="address dny"><div className="addr-name">darkNyan address:</div> <div className="addr-pink">0x23b7f3A35bda036e3B59A945E441E041E6B11101</div> </div>
         <div className="links-box">
           <a href="https://etherscan.io/token/0xc9ce70a381910d0a90b30d408cc9c7705ee882de">NYAN Token Etherscan</a> . <a href="https://uniswap.info/pair/0x544cd63c9a3363dab66733bf8073cb981db58cba">NYAN-ETH Uniswap</a>
         </div>
