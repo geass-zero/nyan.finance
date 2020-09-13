@@ -7,6 +7,7 @@ Body {
 
 .App {
   padding: 10px;
+  height: 100vh;
 }
 
 .App-logo {
@@ -444,14 +445,13 @@ input[type=number]::-webkit-outer-spin-button {
 
 @media only screen and (max-width: 900px) {
   
-
   .Options-box {
     width: unset;
     margin-top: 10%;
   }
 
   .Option {
-    width: 238px;
+    width: 95%;
     height: 110px;
     /* background-color: gray; */
     box-shadow: 0px 4px 18px 0px rgba(0,0,0,0.19);
@@ -471,17 +471,28 @@ input[type=number]::-webkit-outer-spin-button {
     margin-left: unset;
   }
 
-  .stake {
-    position: relative;
-    margin: 0 auto;
-    margin-right: 0;
+  .stake, .mine, .pumped {
+    width: 95%;
+    text-align: left;
+    font-size: 40px;
+    background-size: 15%;
     margin-bottom: 10px;
   }
+}
 
-  .pumped {
-    position: relative;
-    margin: 0 auto;
-    margin-right: 0;
+
+@media only screen and (max-width: 1024px) {
+
+  .Option {
+    width: 95%;
+    height: 110px;
+  }
+  
+  .stake, .mine, .pumped {
+    width: 95%;
+    text-align: left;
+    font-size: 40px;
+    background-size: 10%;
     margin-bottom: 10px;
   }
 }
@@ -495,5 +506,15 @@ input[type=number]::-webkit-outer-spin-button {
     position: unset;
   }
 
+  .Option {
+    width: 95%;
+    height: 125px;
+  }
+
+  .stake, .mine, .pumped {
+    text-align: left;
+    font-size: 22px;
+    background-size: 25%;
+  }
 
 }
