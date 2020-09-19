@@ -310,7 +310,9 @@ Body {
   position: absolute;
   margin: 0 auto;
   width: 90%;
+  height: 100%;
   max-width: 768px;
+  overflow: scroll;
   padding: 20px;
   border-radius: 5px;
   border-color: red;
@@ -397,6 +399,11 @@ button.as-link {
   width: 190px;
   margin-right: 10px;
   display: inline-block;
+}
+
+.stake-warning {
+  color: red;
+  margin-bottom: 10px;
 }
 
 .withdraw-button {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import DarkNyan from "./contracts/DarkNyan.json";
-import DarkNyanUni from "./contracts/DarkNyanUni.json";
+import catnipUni from "./contracts/DarkNyanUni.json";
 import {getWeb3Var} from "./shared";
 
 import ethLogo from './assets/eth.png';
@@ -12,13 +12,14 @@ state = {
     loaded: false,
     stakeAmount: 0,
     stakedAmount: 0,
-    dUniAmount: 0,
+    catnipUniAmount: 0,
     miningStarted: true,
     isApproved: false,
     isApproving: false,
     isStaking: false,
     isWithdrawing: false,
     darkNyanRewards: 0,
+    totalDNyanSupply: 0,
     totalDNyanUniSupply: 0,
     allowance: 0,
     isClaiming: false
@@ -43,17 +44,17 @@ state = {
     }
  }
 
-  getDUniAmount = async () => {
-    let _dUniAmount = await this.DarkNyanUniInstance.methods.balanceOf(this.accounts[0]).call();
+  getCatnipUniAmount = async () => {
+    let _catnipUniAmount = await this.catnipUniInstance.methods.balanceOf(this.accounts[0]).call();
     this.setState({
-      dUniAmount: this.web3.utils.fromWei(_dUniAmount)
+      catnipUniAmount: this.web3.utils.fromWei(_catnipUniAmount)
     })
   }
 
-  getDNyanUniAllowance = async () => {
-    let _dUniAllowance = await this.DarkNyanUniInstance.methods.allowance(this.accounts[0], this.darkNyanInstance._address).call();
-    if (_dUniAllowance > 0) {
-        this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_dUniAllowance.toString())});
+  getCatnipUniAllowance = async () => {
+    let _catnipUniAllowance = await this.catnipUniInstance.methods.allowance(this.accounts[0], this.darkNyanInstance._address).call();
+    if (_catnipUniAllowance > 0) {
+        this.setState({isApproved: true, allowance: this.web3.utils.fromWei(_catnipUniAllowance.toString())});
         
     }
     console.log(this.state.allowance);
@@ -62,18 +63,18 @@ state = {
   getDNyanSupply = async () => {
     let _dNyanSupply = await this.darkNyanInstance.methods.totalSupply().call();
     this.setState({
-      totalDNyanUniSupply: this.web3.utils.fromWei(_dNyanSupply)
+      totalDNyanSupply: this.web3.utils.fromWei(_dNyanSupply)
     })
   }
 
-  approveDNyanUni = async () => {
+  approveCatnipUni = async () => {
     if (this.state.isApproving) {
         return;
     }  
     this.setState({isApproving: true});
     
     try {
-        let approveStaking = await this.DarkNyanUniInstance.methods.approve(this.darkNyanInstance._address, this.web3.utils.toWei(this.state.totalDNyanUniSupply.toString())).send({
+        let approveStaking = await this.catnipUniInstance.methods.approve(this.darkNyanInstance._address, this.web3.utils.toWei(this.state.totalDNyanUniSupply.toString())).send({
             from: this.accounts[0]
         });
         
@@ -85,7 +86,7 @@ state = {
     }
   }
 
-  getDNyanUniStakeAmount = async () => {
+  getCatnipUniStakeAmount = async () => {
     let stakeA = await this.darkNyanInstance.methods.getNipUniStakeAmount(this.accounts[0]).call();
     console.log(stakeA);
     this.setState({stakedAmount: this.web3.utils.fromWei(stakeA)});
@@ -109,7 +110,7 @@ state = {
     }
   }
 
-  stakeDNyanUni = async () => {
+  stakeCatnipUni = async () => {
     if (this.state.isStaking || this.state.stakeAmount === 0) {
         return;
     }                        
@@ -121,7 +122,7 @@ state = {
         });
         if (stakeRes["status"]) {
             this.setState({isStaking: false, stakeAmount: 0});
-            this.getDNyanUniStakeAmount();
+            this.getCatnipStakeAmount();
         }
     } catch (error) {
         this.setState({isStaking: false});
@@ -141,7 +142,7 @@ state = {
       });
         if (stakeRes["status"]) {
             this.setState({isWithdrawing: false, stakeAmount: 0});
-            this.getDNyanUniStakeAmount();
+            this.getCatnipStakeAmount();
         }
     } catch (error) {
         this.setState({isStaking: false});
@@ -166,10 +167,16 @@ state = {
 
       console.log(this.web3.eth)
 
-      this.DarkNyanUniInstance = new this.web3.eth.Contract(
-        DarkNyanUni,
+      this.catnipUniInstance = new this.web3.eth.Contract(
+        catnipUni,
         "0xdB8C25B309Df6bd93d361ad19ef1C5cE5A667d6A"
       );
+
+      console.log(this.catnipUniInstance);
+
+      // this.darkNyanLP = new this.web3.eth.Contract(
+
+      // )
 
 
       this.darkNyanInstance = new this.web3.eth.Contract(
@@ -177,10 +184,10 @@ state = {
         "0x23b7f3a35bda036e3b59a945e441e041e6b11101",
       );
 
-      this.getDNyanUniStakeAmount();
+      this.getCatnipUniStakeAmount();
       this.getDNyanSupply();
-      this.getDNyanUniAllowance();
-      this.getDUniAmount();
+      this.getCatnipUniAllowance();
+      this.getCatnipUniAmount();
       this.getRewardsAmount();
 
     //   this.getMyStakeAmount();
@@ -234,7 +241,7 @@ state = {
               </div>
               <div className="inline-block">
                 <div className="top-box-desc">Amount in Wallet</div>
-                <div className="top-box-val nyan-balance">{this.state.dUniAmount}</div>
+                <div className="top-box-val nyan-balance">{this.state.catnipUniAmount}</div>
               </div>
               <div className="inline-block">
                 <div className="top-box-desc">Amount staked</div>
@@ -261,11 +268,11 @@ state = {
                 autoFocus={true}>
                 </input>
             </div>
-
+            <div className="stake-warning">Make sure to always claim mining rewards before staking more!</div>
             {!this.state.miningStarted ? <div className="button stake-button">
                 {!this.state.isStaking ? <div>MINING HAS NOT STARTED</div> : null}
             </div> : null}
-            {!this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.approveDNyanUni}>
+            {!this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.approveCatnipUni}>
                 {!this.state.isApproving ? <div>APPROVE</div> : null}
                 {this.state.isApproving ? <div>APPROVING...</div> : null}
             </div> : null}
@@ -273,7 +280,37 @@ state = {
                 {!this.state.isClaiming ? <div>CLAIM REWARDS</div> : null}
                 {this.state.isClaiming ? <div>CLAIMING...</div> : null}
             </div> : null}
-            {this.state.isApproved && this.state.miningStarted ? <div className={`button stake-button inliner ${this.state.stakeAmount > 0 && this.state.stakeAmount < this.state.nyanBalance ? "" : "disabled"}`} onClick={this.stakeDNyanUni}>
+            {this.state.isApproved && this.state.miningStarted ? <div className={`button stake-button inliner ${this.state.stakeAmount > 0 && this.state.stakeAmount < this.state.nyanBalance ? "" : "disabled"}`} onClick={this.stakeCatnipUni}>
+                {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
+                {this.state.isStaking ? <div>STAKING...</div> : null}
+            </div> : null}
+            {this.state.miningStarted ? <div className={`button withdraw-button ${this.state.stakeAmount > 0 && this.state.stakeAmount <= this.state.darkNyanRewards ? "" : "disabled"}`} onClick={this.withdrawNipUni}>
+                {!this.state.isWithdrawing ? <div>WITHDRAW</div> : null}
+                {this.state.isWithdrawing ? <div>WITHDRAWING...</div> : null}
+            </div> : null}
+
+            <div>
+                <h3>Boost your darkNyan mining.</h3>
+            </div>
+            <div>
+                <input 
+                className="input-amount" 
+                placeholder="Amount..."
+                value={this.setInputField()} 
+                onChange={this.updateStakingInput.bind(this)}
+                type="number"
+                autoFocus={true}>
+                </input>
+            </div>
+            <div className="stake-warning">Make sure to always claim mining rewards before staking more!</div>
+            {!this.state.miningStarted ? <div className="button stake-button">
+                {!this.state.isStaking ? <div>MINING HAS NOT STARTED</div> : null}
+            </div> : null}
+            {!this.state.isApproved && this.state.miningStarted ? <div className="button stake-button" onClick={this.approveCatnipUni}>
+                {!this.state.isApproving ? <div>APPROVE</div> : null}
+                {this.state.isApproving ? <div>APPROVING...</div> : null}
+            </div> : null}
+            {this.state.isApproved && this.state.miningStarted ? <div className={`button stake-button inliner ${this.state.stakeAmount > 0 && this.state.stakeAmount < this.state.nyanBalance ? "" : "disabled"}`} onClick={this.stakeCatnipUni}>
                 {!this.state.isStaking ? <div>STEP 2: STAKE</div> : null}
                 {this.state.isStaking ? <div>STAKING...</div> : null}
             </div> : null}
