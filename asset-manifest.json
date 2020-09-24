@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.a52ed2f9.chunk.css",
-    "main.js": "/static/js/main.9df12e9d.chunk.js",
-    "main.js.map": "/static/js/main.9df12e9d.chunk.js.map",
+    "main.js": "/static/js/main.51553127.chunk.js",
+    "main.js.map": "/static/js/main.51553127.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.b240f91f.js",
     "runtime-main.js.map": "/static/js/runtime-main.b240f91f.js.map",
     "static/js/2.e3d0164e.chunk.js": "/static/js/2.e3d0164e.chunk.js",
     "static/js/2.e3d0164e.chunk.js.map": "/static/js/2.e3d0164e.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.3c8db2f0eed0a841878d5e90f1f4740f.js": "/precache-manifest.3c8db2f0eed0a841878d5e90f1f4740f.js",
+    "precache-manifest.32a1f00ea7e0357fb1078dc90544b25e.js": "/precache-manifest.32a1f00ea7e0357fb1078dc90544b25e.js",
     "service-worker.js": "/service-worker.js",
     "static/css/main.a52ed2f9.chunk.css.map": "/static/css/main.a52ed2f9.chunk.css.map",
     "static/media/App.css": "/static/media/telegram.a823024f.png",
@@ -19,6 +19,6 @@
     "static/js/runtime-main.b240f91f.js",
     "static/js/2.e3d0164e.chunk.js",
     "static/css/main.a52ed2f9.chunk.css",
-    "static/js/main.9df12e9d.chunk.js"
+    "static/js/main.51553127.chunk.js"
   ]
 }
