@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8729066cfca6d51bf76ee8c0003b40c2",
+    "revision": "0a6e6f97e7e888fcad5496319dcd75cf",
     "url": "/index.html"
   },
   {
-    "revision": "1c805fe89aaf657cf695",
-    "url": "/static/css/main.9a8d7913.chunk.css"
+    "revision": "808796ecf3817f59d39f",
+    "url": "/static/css/main.f6a8f896.chunk.css"
   },
   {
     "revision": "deea151ef9dbbc6a32a3",
     "url": "/static/js/2.70c842c1.chunk.js"
   },
   {
-    "revision": "1c805fe89aaf657cf695",
-    "url": "/static/js/main.9b695023.chunk.js"
+    "revision": "808796ecf3817f59d39f",
+    "url": "/static/js/main.f60590e6.chunk.js"
   },
   {
     "revision": "0a31ddf7382e0363a369",
@@ -44,8 +44,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/eth.99cb2cd3.png"
   },
   {
-    "revision": "38ec77e47a3a2a27bced6860ae1252e6",
-    "url": "/static/media/nyan-small.38ec77e4.gif"
+    "revision": "62c559f1e0126c67a2afb6adf0c5239b",
+    "url": "/static/media/nyan-logo.62c559f1.jpg"
   },
   {
     "revision": "a823024f323f3cd4345044aa8c51d5ac",
