@@ -1,4 +1,4 @@
-Simport React, { Component } from "react";
+import React, { Component } from "react";
 import Staking from "./Staking";
 import Pump from "./Pump";
 import Mine from "./Mine";
