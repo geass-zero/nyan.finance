@@ -94,6 +94,15 @@ class App extends Component {
     return _nyanStaked;
   }
 
+  getNyanStackedPercentage() {
+    let _nyanStaked = this.state.totalNyanStaked;
+    let percentage = (_nyanStaked/33000) * 100
+    if (!isNaN(_nyanStaked)) {
+      return parseFloat(percentage).toFixed(0);
+    }
+    return _nyanStaked;
+  }
+
    getNyanBalance = async () => {
      let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
      this.setState({
@@ -231,7 +240,7 @@ class App extends Component {
             </div>
             <div className="stats-op">
               <div className="top-box-desc">Total Nyan Staked</div>
-              <div className="top-box-val">{this.getRoundedTotalNyanStaked()}</div>
+              <div className="top-box-val">{this.getRoundedTotalNyanStaked()} ({this.getNyanStackedPercentage()}%)</div>
             </div>
             <div className="stats-op">
               <div className="top-box-desc">Total Catnip Supply</div>
