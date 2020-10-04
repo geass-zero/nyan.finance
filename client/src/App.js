@@ -94,7 +94,7 @@ class App extends Component {
     return _nyanStaked;
   }
 
-tS  getNyanStackedPercentage() {
+  getNyanStackedPercentage() {
     let _nyanStaked = this.state.totalNyanStaked;
     let percentage = (_nyanStaked/33000) * 100
     if (!isNaN(_nyanStaked)) {
@@ -172,7 +172,7 @@ tS  getNyanStackedPercentage() {
       if (!window.ethereum) {
           //  Create WalletConnect Provider
         const provider = new WalletConnectProvider({
-          infuraId: "6f6204d423c047ee9e681d2ee65f8a3a" // Required
+          infuraId: "83301e4b4e234662b7769295c0f4a2e1" // Required
         });
 
         //  Enable session (triggers QR Code modal)
