@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+Simport React, { Component } from "react";
 import Staking from "./Staking";
 import Pump from "./Pump";
 import Mine from "./Mine";
@@ -94,6 +94,15 @@ class App extends Component {
     return _nyanStaked;
   }
 
+tS  getNyanStackedPercentage() {
+    let _nyanStaked = this.state.totalNyanStaked;
+    let percentage = (_nyanStaked/33000) * 100
+    if (!isNaN(_nyanStaked)) {
+      return parseFloat(percentage).toFixed(0);
+    }
+    return _nyanStaked;
+  }
+
    getNyanBalance = async () => {
      let _nyanBalance = await this.nyanInstance.methods.balanceOf(this.accounts[0]).call();
      this.setState({
@@ -163,7 +172,7 @@ class App extends Component {
       if (!window.ethereum) {
           //  Create WalletConnect Provider
         const provider = new WalletConnectProvider({
-          infuraId: "83301e4b4e234662b7769295c0f4a2e1" // Required
+          infuraId: "6f6204d423c047ee9e681d2ee65f8a3a" // Required
         });
 
         //  Enable session (triggers QR Code modal)
@@ -231,7 +240,7 @@ class App extends Component {
             </div>
             <div className="stats-op">
               <div className="top-box-desc">Total Nyan Staked</div>
-              <div className="top-box-val">{this.getRoundedTotalNyanStaked()}</div>
+              <div className="top-box-val">{this.getRoundedTotalNyanStaked()} ({this.getNyanStackedPercentage()}%)</div>
             </div>
             <div className="stats-op">
               <div className="top-box-desc">Total Catnip Supply</div>
